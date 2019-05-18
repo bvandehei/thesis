@@ -24,12 +24,9 @@ public class GetBugInfo {
 
    public static ArrayList<LocalDateTime> releases;
    public static HashMap<String, Integer> closedBugs;
-   public static HashMap<String, String> closedBugsAndFix;
-   public static HashMap<String, String> closedBugsAndDirectory;
-   public static HashMap<String, String> closedBugsAndHash;
+   public static HashMap<String, String> closedBugsAndClasses;
    public static HashMap<String, Integer> closedBugsAndAV;
    public static HashMap<String, Integer> closedBugsAndCreation;
-   public static HashMap<String, String> closedBugsAndCreationDate;
    public static HashMap<String, String> closedBugsAndResolution;
    public static HashMap<LocalDateTime, String> releaseNames;
    public static HashMap<LocalDateTime, String> releaseID;
@@ -193,13 +190,9 @@ public class GetBugInfo {
             Integer created = findRelease(issues.getJSONObject(i%1000)
                          .getJSONObject("fields").get("created").toString().substring(0,20));
             closedBugsAndCreation.put(key,created);
-            String creationdate = issues.getJSONObject(i%1000)
-                         .getJSONObject("fields").get("created").toString();
-            creationdate = creationdate.replace("T", " ").replace(".000", " ");
-            closedBugsAndCreationDate.put(key,creationdate);
             String resolution = issues.getJSONObject(i%1000)
                          .getJSONObject("fields").get("resolutiondate").toString();
-            closedBugsAndResolution.put(key,resolution.replace("T", " ").replace(".000", " "));
+            closedBugsAndResolution.put(key,resolution);
             //Get list of AV recorded for the bug
             if( issues.getJSONObject(i%1000).getJSONObject("fields").has("versions")) {
                JSONArray versions = issues.getJSONObject(i%1000).getJSONObject("fields")
@@ -238,17 +231,14 @@ public class GetBugInfo {
 				       //Name of CSV for output
 				       fileWriter = new FileWriter(outname);
 				       //Header for CSV
-				       fileWriter.append("Bug ID,Bug Resolution Date,Ticket Creation Date,Fix Date,Hash,Git Directory");
+				       fileWriter.append("Bug ID,Bug Resolution Date,Classes Touched by Fix,Earliest AV,Version of Ticket Creation,Version of Fix");
 				       fileWriter.append("\n");
 
                releases = new ArrayList<LocalDateTime>();
                getReleases(token[0]);
 
 						   closedBugs = new HashMap<String, Integer>();
-						   closedBugsAndFix = new HashMap<String, String>();
-						   closedBugsAndDirectory = new HashMap<String, String>();
-						   closedBugsAndCreationDate = new HashMap<String, String>();
-						   closedBugsAndHash = new HashMap<String, String>();
+						   closedBugsAndClasses = new HashMap<String, String>();
                closedBugsAndAV = new HashMap<String, Integer>();
                closedBugsAndCreation = new HashMap<String, Integer>();
                closedBugsAndResolution = new HashMap<String, String>();
@@ -264,7 +254,7 @@ public class GetBugInfo {
                   String path =  token2[token2.length - 1].substring(0, token2[token2.length - 1].length() - 4);
                   for ( j = 0; j < bugs.size(); j++) {
                      command = "git --git-dir ./" + path +
-                     "/.git log --branches --grep="+ bugs.get(j) +" --pretty=format:%cd%H --date=iso -1";
+                     "/.git log --branches --grep="+ bugs.get(j) +" --pretty=format:%cd%H --date=iso-strict -1";
                       // Read the output
                       proc = Runtime.getRuntime().exec(command);
                       BufferedReader reader =
@@ -272,14 +262,23 @@ public class GetBugInfo {
                       String line = "";
                       if((line = reader.readLine()) != null) {
                           proc.waitFor();
-                          String datePart = line.substring(0, 25);
+                          String datePart = line.substring(0, 19);
                           String hash = line.substring(25);
-                          Integer x = findRelease(datePart.substring(0,19).replace(" ", "T"));
+                          Integer x = findRelease(datePart);
                           if (closedBugs.get(bugs.get(j)) == null || closedBugs.get(bugs.get(j)) < x) {
-                               closedBugsAndFix.put(bugs.get(j), datePart);
-                               closedBugsAndHash.put(bugs.get(j), hash);
-                               closedBugsAndDirectory.put(bugs.get(j), path);
                                closedBugs.put(bugs.get(j), x);
+                               command = "git --git-dir ./" + path + "/.git " +
+                                 "diff --name-only " + hash + "^ " + hash;
+                               proc = Runtime.getRuntime().exec(command);
+                               reader =
+				                         new BufferedReader(new InputStreamReader(proc.getInputStream()));
+                               line = "";
+                               String classes = "";
+                               while((line = reader.readLine()) != null) {
+                                  classes += line + "|";
+                               }
+                               proc.waitFor();
+                               closedBugsAndClasses.put(bugs.get(j), classes);
                           }
                       }
                       else {
@@ -295,10 +294,10 @@ public class GetBugInfo {
                          !(closedBugsAndAV.get(bugs.get(j)) == closedBugsAndCreation.get(bugs.get(j)) &&
                           closedBugsAndAV.get(bugs.get(j)) == closedBugs.get(bugs.get(j)))) {
                          write = bugs.get(j) + "," + closedBugsAndResolution.get(bugs.get(j))
-                          + "," + closedBugsAndCreationDate.get(bugs.get(j)) + "," +
-                          closedBugsAndFix.get(bugs.get(j)) + "," +
-                          closedBugsAndHash.get(bugs.get(j))+ "," +
-                          closedBugsAndDirectory.get(bugs.get(j)) + "\n";
+                          + "," + closedBugsAndClasses.get(bugs.get(j)) + "," +
+                          closedBugsAndAV.get(bugs.get(j)).toString() + "," +
+                          closedBugsAndCreation.get(bugs.get(j)).toString() + "," +
+                          closedBugs.get(bugs.get(j)).toString() + "\n";
                          System.out.println(write);
                          fileWriter.append(write);
                   }
