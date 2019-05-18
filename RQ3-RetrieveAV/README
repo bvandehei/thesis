@@ -1,5 +1,0 @@
-This program calculates the bugginess of versions in a project for each bug.
-This program reads in from the Projects.csv folder to get a list of projects to
-perform the methods on. The projects in Projects.csv are the top 10 Jira programs
-with the fewest problems and at least 100 bugs that have a git commit associated with
-it and !(AV == CV == FV) and no problems. Using the output files from CreateInputFiles the program reads in the bug and version csv for each project and calculates the bugginess of each version of the projects for each bug. Then it outputs the Project name, Bug ID, BUG order (i index), version ID, version name, Simple (Yes/No), LAV (Yes/No), Actual bugginess (yes/no) for each project in one csv file. In another csv it reports the ProjectName, Method, Precision, Recall, F1, Matthews correlation coefficient (MCC), and Kappa.
