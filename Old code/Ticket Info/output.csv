@@ -1,0 +1,85 @@
+id,clssified,type,title,creation time,resolved time,priority,severity,description,comments
+433878,BUG,BUG,"minor glitch when decompiling 'let' statements",2008-05-15T13:40:20Z,2008-05-16T21:13:41Z,--,normal,"From http://groups.google.com/group/mozilla.dev.tech.js-engine.rhino/msg/2605df4e4d2b328d:
+
+Hi Everyone,
+
+with the following source code:
+
+function myFunc(a, b, c) {
+  let sum = a + b + c ;
+  return sum / 3 ;
+
+}
+
+p("the string is: " + myFunc.toString()) ;
+
+I get the following output:
+
+the string is:
+function myFunc(a, b, c) {
+    let sum = a + b + creturn sum / 3;
+
+}
+
+Applying the following patch:
+
+diff -r -u mozilla/js/rhino/src/org/mozilla/javascript/Parser.java
+mozilla-patched/js/rhino/src/org/mozilla/javascript/Parser.java
+--- mozilla/js/rhino/src/org/mozilla/javascript/Parser.java     2008-04-19
+18:53:24.000000000 -0700
++++ mozilla-patched/js/rhino/src/org/mozilla/javascript/Parser.java
+2008-05-13 12:46:51.000000000 -0700
+@@ -1117,7 +1117,7 @@
+             } else {
+                 pn = variables(false, tt);
+             }
+-            return pn;
++            break;
+           }
+
+           case Token.RETURN:
+
+gives the following (presumably correct) output:
+
+the string is:
+function myFunc(a, b, c) {
+    let sum = a + b + c;
+    return sum / 3;
+
+}
+
+Let me know if anyone sees a problem with this!
+
+Thanks,
+Ben","Created attachment 321328
+Proposed patch
+
+Once I ran this through the regression tests, this ended up being more complicated unfortunately. There was a missing error check all along, but the previous bug caused us to pass a negative test, so I had to implement that to get everything to pass.","Fixed: 
+
+Checking in src/org/mozilla/javascript/IRFactory.java;
+/cvsroot/mozilla/js/rhino/src/org/mozilla/javascript/IRFactory.java,v  <--  IRFactory.java
+new revision: 1.119; previous revision: 1.118
+done
+Checking in src/org/mozilla/javascript/Parser.java;
+/cvsroot/mozilla/js/rhino/src/org/mozilla/javascript/Parser.java,v  <--  Parser.java
+new revision: 1.128; previous revision: 1.127
+done
+Checking in src/org/mozilla/javascript/resources/Messages.properties;
+/cvsroot/mozilla/js/rhino/src/org/mozilla/javascript/resources/Messages.properties,v  <--  Messages.properties
+new revision: 1.87; previous revision: 1.86
+done
+RCS file: /cvsroot/mozilla/js/rhino/testsrc/doctests/433878.doctest,v
+done
+Checking in testsrc/doctests/433878.doctest;
+/cvsroot/mozilla/js/rhino/testsrc/doctests/433878.doctest,v  <--  433878.doctestinitial revision: 1.1
+done
+"
+310323,RFE,RFE,"Array extras: forEach, indexOf, filter, map, some, every",2005-09-28T16:08:26Z,2005-09-28T16:14:04Z,--,enhancement,"Rhino version of SpiderMonkey bug 290592.
+
+Implement the array extras as described in
+http://developer.mozilla.org/en/docs/New_in_JavaScript_1.6#Array_extras.","Fixed:
+
+Checking in NativeArray.java;
+/cvsroot/mozilla/js/rhino/src/org/mozilla/javascript/NativeArray.java,v  <--  Na
+tiveArray.java
+new revision: 1.67; previous revision: 1.66"

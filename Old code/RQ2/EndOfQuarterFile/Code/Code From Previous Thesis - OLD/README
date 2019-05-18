@@ -1,0 +1,10 @@
+This code works to parse the Jira and Bugzilla JSON tickets.
+These are two seperate pograms.
+The file names need to be editted before running.
+They successfully parse the fields in the first line of the output file.
+However, formatting is not perfect yet, long descriptions and long comments
+cause the csv files to look very strange and impossible to read.
+Bugzilla limits the amount of requests per hour also, so it cannot parse
+a whole input file at a time.
+To run these files, edit the file names for the input .csv and output file name.
+Also, add the jar to your classpath.
