@@ -28,7 +28,7 @@ public class PPAM {
    public static HashMap<String, String> closedBugsAndRepo;
    public static HashMap<String, Integer> closedBugsAndAV;
    public static HashMap<String, Integer> closedBugsAndCreation;
-   public static HashMap<String, LocalDateTime> closedBugsAndCreationDate;
+   public static HashMap<String, LocalDateTime> closedBugsAndFixDate;
    public static HashMap<String, String> closedBugsAndResolution;
    public static HashMap<LocalDateTime, String> releaseNames;
    public static HashMap<LocalDateTime, String> releaseID;
@@ -159,9 +159,8 @@ public class PPAM {
             String createdStr = issues.getJSONObject(i%1000)
                          .getJSONObject("fields").get("created").toString().substring(0,20);
             Integer created = findRelease(createdStr);
-            LocalDateTime createdDateTime = LocalDateTime.parse(createdStr);
             closedBugsAndCreation.put(key,created);
-            closedBugsAndCreationDate.put(key,createdDateTime);
+
             String resolution = issues.getJSONObject(i%1000)
                          .getJSONObject("fields").get("resolutiondate").toString();
             closedBugsAndResolution.put(key,resolution);
@@ -190,22 +189,52 @@ public class PPAM {
 
    public static void main(String[] args) throws IOException, JSONException {
       String csvFile = "Projects.csv";
+      String trainFile = "../RQ3-AllAVRetrievalMethods/TrainBugs.csv";
+      String testFile = "../RQ3-AllAVRetrievalMethods/TestBugs.csv";
       String cvsSplitBy = ",";
       Integer i, j, t;
+      ArrayList<String> trainBugs = new ArrayList<String>();
+      ArrayList<String> testBugs = new ArrayList<String>();
+      try (BufferedReader br = new BufferedReader(new FileReader(trainFile))) {
+         String linefromcsv;
+         while ( (linefromcsv = br.readLine()) != null) {
+            trainBugs.add(linefromcsv);
+         }
+      } catch (IOException e) {
+         e.printStackTrace();
+      }
+      try (BufferedReader br = new BufferedReader(new FileReader(testFile))) {
+         String linefromcsv;
+         while ( (linefromcsv = br.readLine()) != null) {
+            testBugs.add(linefromcsv);
+         }
+      } catch (IOException e) {
+         e.printStackTrace();
+      }
+
       try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
          String linefromcsv, newline, write;
-         while ( (linefromcsv = br.readLine()) != null) {
-            FileWriter fileWriter = null;
-				    try {
-               fileWriter = null;
-               String[] token = linefromcsv.split(cvsSplitBy);
-               String outname = token[0] + "PPAM.csv";
-				       //Name of CSV for output
-				       fileWriter = new FileWriter(outname);
-				       //Header for CSV
-				       fileWriter.append("Bug ID,Version Index,Version Name,Days from Version to Ticket Creation,LOC touched from Version to Ticket Creation,Bugginess");
-				       fileWriter.append("\n");
+         Integer num = Integer.parseInt(args[0]);
 
+         int n = 0;
+         while ( (linefromcsv = br.readLine()) != null) {
+            if ( num == n) {
+            FileWriter fileWriterTrain = null;
+            FileWriter fileWriterTest = null;
+				    try {
+               fileWriterTrain = null;
+               fileWriterTest = null;
+               String[] token = linefromcsv.split(cvsSplitBy);
+               String outnameTrain = token[0] + "PPAMTrainSet.csv";
+               String outnameTest = token[0] + "PPAMTestSet.csv";
+				       //Name of CSV for output
+				       fileWriterTrain = new FileWriter(outnameTrain);
+				       fileWriterTest = new FileWriter(outnameTest);
+				       //Header for CSV
+				       fileWriterTrain.append("Bug ID,Version Index,Version Name,Days from Version to Ticket Creation,LOC touched from Version to Ticket Creation,Bugginess");
+				       fileWriterTrain.append("\n");
+				       fileWriterTest.append("Bug ID,Version Index,Version Name,Days from Version to Ticket Creation,LOC touched from Version to Ticket Creation,Bugginess");
+				       fileWriterTest.append("\n");
                releases = new ArrayList<LocalDateTime>();
                getReleases(token[0]);
 
@@ -214,23 +243,23 @@ public class PPAM {
 						   closedBugsAndRepo = new HashMap<String, String>();
                closedBugsAndAV = new HashMap<String, Integer>();
                closedBugsAndCreation = new HashMap<String, Integer>();
-               closedBugsAndCreationDate = new HashMap<String, LocalDateTime>();
+               closedBugsAndFixDate = new HashMap<String, LocalDateTime>();
                closedBugsAndResolution = new HashMap<String, String>();
                getBugInfo(token[0]);
                ArrayList<String> bugs = new ArrayList<String>(closedBugs.keySet());
 
                //check all repos for the bug key
                for ( i = 1; i < token.length; i++) {
-                  String command = "git clone " + token[i];
-                  Process proc = Runtime.getRuntime().exec(command);
-                  proc.waitFor();
+                  //String command = "git clone " + token[i];
+                  //Process proc = Runtime.getRuntime().exec(command);
+                  //proc.waitFor();
                   String[] token2 = token[i].split("/");
                   String path =  token2[token2.length - 1].substring(0, token2[token2.length - 1].length() - 4);
                   for ( j = 0; j < bugs.size(); j++) {
-                     command = "git --git-dir ./" + path +
+                     String command = "git --git-dir ./GitClones/" + path +
                      "/.git log --branches --grep="+ bugs.get(j) +" --pretty=format:%cd%H --date=iso-strict -1";
                       // Read the output
-                      proc = Runtime.getRuntime().exec(command);
+                      Process proc = Runtime.getRuntime().exec(command);
                       BufferedReader reader =
                         new BufferedReader(new InputStreamReader(proc.getInputStream()));
                       String line = "";
@@ -239,9 +268,12 @@ public class PPAM {
                           String datePart = line.substring(0, 19);
                           String hash = line.substring(25);
                           Integer x = findRelease(datePart);
-                          if (closedBugs.get(bugs.get(j)) == null || closedBugs.get(bugs.get(j)) < x) {
+                          LocalDateTime fixDateTime = LocalDateTime.parse(datePart);
+                          if (closedBugs.get(bugs.get(j)) == null || closedBugs.get(bugs.get(j)) < x
+                              || closedBugsAndFixDate.get(bugs.get(j)).isBefore(fixDateTime)) {
                                closedBugs.put(bugs.get(j), x);
-                               command = "git --git-dir ./" + path + "/.git " +
+                               closedBugsAndFixDate.put(bugs.get(j),fixDateTime);
+                               command = "git --git-dir ./GitClones/" + path + "/.git " +
                                  "diff --name-only " + hash + "^ " + hash;
                                proc = Runtime.getRuntime().exec(command);
                                reader =
@@ -263,28 +295,52 @@ public class PPAM {
                }
 
                for ( j = 0; j < bugs.size(); j++) {
+
                   if ( closedBugs.get(bugs.get(j)) != null && closedBugsAndAV.get(bugs.get(j)) != null
                          && closedBugsAndAV.get(bugs.get(j)) <= closedBugsAndCreation.get(bugs.get(j))
                          && closedBugsAndAV.get(bugs.get(j)) <= closedBugs.get(bugs.get(j)) &&
                          !(closedBugsAndAV.get(bugs.get(j)) == closedBugsAndCreation.get(bugs.get(j)) &&
-                          closedBugsAndAV.get(bugs.get(j)) == closedBugs.get(bugs.get(j)))) {
+                          closedBugsAndAV.get(bugs.get(j)) == closedBugs.get(bugs.get(j))) &&
+                          (trainBugs.contains(bugs.get(j)) || testBugs.contains(bugs.get(j)))) {
+System.out.println(bugs.get(j));
+                     String[] classes = closedBugsAndClasses.get(bugs.get(j)).split("\\|");
+                     ArrayList<Long> linesChangedPerClass = new ArrayList<Long>();
+                     for (int cn = 0; cn < classes.length; cn++) {
+                        linesChangedPerClass.add(cn, 0L);
+                     }
+                     for ( Integer v = closedBugs.get(bugs.get(j)) - 1; v >=0; v--) {
 
-                     for ( int v = 0; v < releases.size() &&
-                        releases.get(v).isBefore(closedBugsAndCreationDate.get(bugs.get(j))); v++) {
-                         Long days = ChronoUnit.DAYS.between(releases.get(v), closedBugsAndCreationDate.get(bugs.get(j)));
+                         Long days = 0L;
+                         if (v != (closedBugs.get(bugs.get(j)) - 1) )
+                            days = ChronoUnit.DAYS.between(releases.get(v), closedBugsAndFixDate.get(bugs.get(j)));
                          Integer vIndex = v + 1;
                          String buggy = "No";
-                         if ( (v+1) >= closedBugsAndAV.get(bugs.get(j)))
+                         if ( (v+1) >= closedBugsAndAV.get(bugs.get(j)) && (v+1) < closedBugs.get(bugs.get(j)))
                             buggy = "Yes";
-
-                         String[] classes = closedBugsAndClasses.get(bugs.get(j)).split("\\|");
 
                          Long locTouched = 0L;
                          for ( int c = 0; c < classes.length; c++) {
-                             String command = "git --git-dir ./" + closedBugsAndRepo.get(bugs.get(j)) + "/.git " +
+                             Integer spaces =( classes[c].length() - classes[c].replaceAll(" ", "").length()) + 3;
+                             String command = "";
+                             if ( v == (closedBugs.get(bugs.get(j)) -1 )){
+                                command = "git --git-dir ./GitClones/" + closedBugsAndRepo.get(bugs.get(j)) + "/.git " +
+				                                  "log --stat=5050,5000 --since " + closedBugsAndFixDate.get(bugs.get(j)) + " --until " +
+                                          closedBugsAndFixDate.get(bugs.get(j)) + " | grep " +
+                                          "\"^ " + classes[c] + "[ \\t][ \\t]*|[ \\t][ \\t]*\\d\\d*[ \\t][+-]*$\"" + " | awk \'{print $"+ spaces.toString()+"}\'";
+                             }
+                             else if ( v == (closedBugs.get(bugs.get(j)) -2 )){
+                                command = "git --git-dir ./GitClones/" + closedBugsAndRepo.get(bugs.get(j)) + "/.git " +
 				                                  "log --stat=5050,5000 --since " + releases.get(v) + " --until " +
-                                          closedBugsAndCreationDate.get(bugs.get(j)) + " | grep " +
-                                          "\"" + classes[c] + "[ \t][ \t]*|[ \t][ \t]*\d\d*[ \t][+-]*\"" + " | awk \'{print $3}\'";
+                                          closedBugsAndFixDate.get(bugs.get(j)) + " | grep " +
+                                          "\"^ " + classes[c] + "[ \\t][ \\t]*|[ \\t][ \\t]*\\d\\d*[ \\t][+-]*$\"" + " | awk \'{print $"+ spaces.toString()+"}\'";
+                             }
+                             else{
+                                command = "git --git-dir ./GitClones/" + closedBugsAndRepo.get(bugs.get(j)) + "/.git " +
+				                                  "log --stat=5050,5000 --since " + releases.get(v) + " --until " +
+                                          releases.get(v+1) + " | grep " +
+                                          "\"^ " + classes[c] + "[ \\t][ \\t]*|[ \\t][ \\t]*\\d\\d*[ \\t][+-]*$\"" + " | awk \'{print $"+ spaces.toString()+"}\'";
+                             }
+
                              String path = "./" + closedBugsAndRepo.get(bugs.get(j)) + "/.git";
 				                     Process proc2 = Runtime.getRuntime().exec(new String[] {"/bin/sh", "-c", command});
 				                     BufferedReader reader2 =
@@ -292,14 +348,26 @@ public class PPAM {
 				                     String line = "";
 				                     while((line = reader2.readLine()) != null) {
                                 if (line.length() > 0)
-				                           locTouched += Long.parseLong(line);
+				                           linesChangedPerClass.set(c, linesChangedPerClass.get(c) + Long.parseLong(line));
 				                     }
 				                     proc2.waitFor();
                          }
-
-                         fileWriter.append(bugs.get(j) + "," + vIndex.toString() +
-                           "," + releaseNames.get(releases.get(v)) + "," + days.toString() + "," +
-                           locTouched.toString() + "," + buggy + "\n");
+                         for (int cn = 0; cn < classes.length; cn++) {
+                            locTouched += linesChangedPerClass.get(cn);
+                         }
+                         String vname = "not released";
+                         if ( v < releases.size())
+                             vname = releaseNames.get(releases.get(v));
+                         if (trainBugs.contains(bugs.get(j))) {
+                            fileWriterTrain.append(bugs.get(j) + "," + vIndex.toString() +
+                              "," + vname + "," + days.toString() + "," +
+                              locTouched.toString() + "," + buggy + "\n");
+                         }
+                         else if (testBugs.contains(bugs.get(j))) {
+                            fileWriterTest.append(bugs.get(j) + "," + vIndex.toString() +
+                              "," + vname + "," + days.toString() + "," +
+                              locTouched.toString() + "," + buggy + "\n");
+                         }
                      }
                   }
                }
@@ -308,14 +376,18 @@ public class PPAM {
                e.printStackTrace();
             } finally {
                try {
-                  fileWriter.flush();
-                  fileWriter.close();
+                  fileWriterTest.flush();
+                  fileWriterTest.close();
+                  fileWriterTrain.flush();
+                  fileWriterTrain.close();
                } catch (IOException e) {
                   System.out.println("Error while flushing/closing fileWriter !!!");
                   e.printStackTrace();
                }
             }
          }
+         n++;
+}
       } catch (IOException e) {
          e.printStackTrace();
       }

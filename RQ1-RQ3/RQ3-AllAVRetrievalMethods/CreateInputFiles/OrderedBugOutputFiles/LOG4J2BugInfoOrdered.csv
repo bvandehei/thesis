@@ -12,7 +12,7 @@ LOG4J2-78,2012-09-05T16:27:29.000+0000,log4j-core/src/main/java/org/apache/loggi
 LOG4J2-80,2012-09-07T18:26:56.000+0000,src/changes/changes.xml|,2,3,22
 LOG4J2-82,2012-09-08T06:28:53.000+0000,log4j-core/src/test/java/org/apache/logging/log4j/core/appender/rolling/PatternProcessorTest.java|log4j-core/src/test/java/org/apache/logging/log4j/core/pattern/PatternParserTest2.java|,2,3,17
 LOG4J2-81,2012-09-09T05:45:59.000+0000,log4j-core/src/main/java/org/apache/logging/log4j/core/pattern/DatePatternConverter.java|log4j-core/src/test/java/org/apache/logging/log4j/core/pattern/DatePatternConverterTest.java|src/changes/changes.xml|,2,3,20
-LOG4J2-91,2012-09-25T06:30:29.000+0000,src/changes/changes.xml|src/site/xdoc/manual/async.xml|,3,4,20
+LOG4J2-91,2012-09-25T06:30:29.000+0000,log4j-api-java9/src/main/java/org/apache/logging/log4j/util/Base64Util.java|log4j-api/src/main/java/org/apache/logging/log4j/util/Base64Util.java|log4j-api/src/main/java/org/apache/logging/log4j/util/Timer.java|log4j-core/src/main/java/org/apache/logging/log4j/core/util/BasicAuthorizationProvider.java|log4j-core/src/main/java/org/apache/logging/log4j/core/util/WatchEventService.java|log4j-core/src/main/java/org/apache/logging/log4j/core/util/WatchManager.java|,3,4,39
 LOG4J2-92,2012-09-29T23:38:29.000+0000,log4j-core/src/main/java/org/apache/logging/log4j/core/layout/Rfc5424Layout.java|src/changes/changes.xml|,1,4,31
 LOG4J2-93,2012-10-08T13:55:06.000+0000,log4j-1.2-api/src/test/java/org/apache/log4j/LogWithRouteTest.java|log4j-1.2-api/src/test/resources/log-RouteWithMDC.xml|,3,4,22
 LOG4J2-94,2012-10-13T17:41:38.000+0000,src/changes/changes.xml|,3,4,22
@@ -88,8 +88,8 @@ LOG4J2-244,2013-05-13T20:23:05.000+0000,src/site/asciidoc/manual/configuration.a
 LOG4J2-255,2013-05-15T16:35:39.000+0000,log4j-jdbc/src/main/java/org/apache/logging/log4j/jdbc/appender/JdbcDatabaseManager.java|src/changes/changes.xml|,8,9,39
 LOG4J2-257,2013-05-16T15:25:34.000+0000,pom.xml|src/changes/changes.xml|,8,9,39
 LOG4J2-258,2013-05-16T15:52:35.000+0000,log4j-core/src/test/java/org/apache/logging/log4j/core/net/SocketReconnectTest.java|,8,9,39
-LOG4J2-259,2013-05-16T16:01:18.000+0000,log4j-core/src/main/java/org/apache/logging/log4j/core/net/TcpSocketManager.java|src/changes/changes.xml|,8,9,39
-LOG4J2-260,2013-05-16T16:13:21.000+0000,core/src/main/java/org/apache/logging/log4j/core/layout/XMLLayout.java|core/src/test/java/org/apache/logging/log4j/core/layout/XMLLayoutTest.java|src/changes/changes.xml|,8,9,9
+LOG4J2-259,2013-05-16T16:01:18.000+0000,log4j-core/src/test/java/org/apache/logging/log4j/junit/AbstractExternalFileCleaner.java|src/changes/changes.xml|,8,9,39
+LOG4J2-260,2013-05-16T16:13:21.000+0000,log4j-core/src/main/java/org/apache/logging/log4j/core/appender/rolling/CronTriggeringPolicy.java|log4j-core/src/main/java/org/apache/logging/log4j/core/appender/rolling/PatternProcessor.java|log4j-core/src/main/java/org/apache/logging/log4j/core/appender/rolling/TimeBasedTriggeringPolicy.java|log4j-core/src/test/java/org/apache/logging/log4j/core/appender/rolling/RollingAppenderSizeWithTimeTest.java|log4j-core/src/test/resources/log4j-rolling-size-with-time.xml|src/changes/changes.xml|src/site/asciidoc/manual/appenders.adoc|,8,9,39
 LOG4J2-261,2013-05-20T06:42:32.000+0000,flume-ng/src/main/java/org/apache/logging/log4j/flume/appender/FlumeEmbeddedManager.java|src/changes/changes.xml|,8,9,9
 LOG4J2-264,2013-05-22T02:30:12.000+0000,taglib/src/main/resources/META-INF/log.tld|,8,9,9
 LOG4J2-254,2013-05-26T15:56:22.000+0000,log4j-core/src/main/java/org/apache/logging/log4j/core/appender/routing/RoutingAppender.java|src/changes/changes.xml|,9,9,39
@@ -585,3 +585,8 @@ LOG4J2-1906,2019-02-03T06:29:22.000+0000,log4j-core/revapi.json|log4j-core/src/m
 LOG4J2-2559,2019-02-27T14:58:31.000+0000,log4j-jdbc/src/main/java/org/apache/logging/log4j/jdbc/appender/JdbcDatabaseManager.java|src/changes/changes.xml|,33,39,39
 LOG4J2-2327,2019-02-27T15:13:26.000+0000,log4j-api/src/main/java/org/apache/logging/log4j/util/PropertiesUtil.java|src/changes/changes.xml|,34,35,35
 LOG4J2-2592,2019-04-16T13:00:43.000+0000,log4j-core/src/main/java/org/apache/logging/log4j/core/net/TcpSocketManager.java|src/changes/changes.xml|,34,39,39
+LOG4J2-2597,2019-05-07T05:06:28.000+0000,log4j-slf4j-impl/pom.xml|log4j-slf4j-impl/src/main/java/org/apache/logging/slf4j/Log4jLoggerFactory.java|log4j-slf4j-impl/src/test/java/org/apache/logging/slf4j/OverflowTest.java|log4j-slf4j18-impl/pom.xml|log4j-slf4j18-impl/src/main/java/org/apache/logging/slf4j/Log4jLoggerFactory.java|log4j-slf4j18-impl/src/test/java/org/apache/logging/slf4j/OverflowTest.java|src/changes/changes.xml|,38,39,39
+LOG4J2-2602,2019-05-12T22:38:03.000+0000,log4j-core/src/main/java/org/apache/logging/log4j/core/appender/rolling/CronTriggeringPolicy.java|log4j-core/src/main/java/org/apache/logging/log4j/core/appender/rolling/PatternProcessor.java|log4j-core/src/main/java/org/apache/logging/log4j/core/appender/rolling/TimeBasedTriggeringPolicy.java|log4j-core/src/test/java/org/apache/logging/log4j/core/appender/rolling/RollingAppenderSizeWithTimeTest.java|log4j-core/src/test/resources/log4j-rolling-size-with-time.xml|src/changes/changes.xml|src/site/asciidoc/manual/appenders.adoc|,38,39,39
+LOG4J2-1103,2019-05-13T05:21:36.000+0000,log4j-core/src/test/java/org/apache/logging/log4j/core/config/plugins/validation/validators/ValidatingPluginWithFailoverTest.java|,19,20,39
+LOG4J2-2561,2019-05-13T05:38:30.000+0000,src/changes/changes.xml|,38,39,39
+LOG4J2-2564,2019-05-14T15:02:59.000+0000,log4j-core/src/main/java/org/apache/logging/log4j/core/pattern/PatternParser.java|log4j-core/src/test/java/org/apache/logging/log4j/core/pattern/PatternParserTest.java|src/changes/changes.xml|,38,39,39

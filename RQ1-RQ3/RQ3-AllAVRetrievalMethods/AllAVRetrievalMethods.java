@@ -74,6 +74,7 @@ public class AllAVRetrievalMethods {
                   brBugs.readLine();
                   while ( (linefrombug = brBugs.readLine()) != null) {
                      String[] tokenBug = linefrombug.split(cvsSplitBy);
+System.out.println(tokenBug[0]);
                      BugAndKey.put(bugOrder, tokenBug[0]);
                      BugAndAV.put(bugOrder, Integer.parseInt(tokenBug[3]));
                      BugAndCreation.put(bugOrder, Integer.parseInt(tokenBug[4]));
@@ -86,7 +87,7 @@ public class AllAVRetrievalMethods {
                }
                Double Psum = 0.0;
                Double Ptotal = 0.0;
-               for ( int i = 1; i <(totalBugs/ 2); i++) {
+               for ( int i = 1; i <= (totalBugs/ 3); i++) {
                   Double TV2FV = 1.0;
                   if ( BugAndFix.get(i) - BugAndCreation.get(i) != 0)
                      TV2FV = (double)(BugAndFix.get(i) - BugAndCreation.get(i));
@@ -104,10 +105,14 @@ public class AllAVRetrievalMethods {
          Integer totalBugs = 0, totalVersions = 0;
          FileWriter fileWriter = null;
          FileWriter fileWriter2 = null;
+         FileWriter fileWriterTrain = null;
+         FileWriter fileWriterTest = null;
          try {
             //Name of CSV for output
 				    fileWriter = new FileWriter("MethodsResults.csv");
 				    fileWriter2 = new FileWriter("MethodsStatistics.csv");
+				    fileWriterTrain = new FileWriter("TrainBugs.csv");
+				    fileWriterTest = new FileWriter("TestBugs.csv");
             //Header for CSV
             fileWriter.append("Project Key,Bug ID,Bug Order,Version ID,Version Name," +
                               "Simple,Proportion0.5,Proportion1,Proportion2,Merge,Cold Start Proportion," +
@@ -258,14 +263,15 @@ public class AllAVRetrievalMethods {
                Long fifTP = 0L, fifTN = 0L, fifFP = 0L, fifFN = 0L;
                Long SFTP = 0L, SFTN = 0L, SFFP = 0L, SFFN = 0L;
                Long HunTP = 0L, HunTN = 0L, HunFP = 0L, HunFN = 0L;
-
-               for ( i = 1; i < (totalBugs/ 2); i++) {
+Integer train = 0;
+               for ( i = 1; i <= (totalBugs/ 3); i++) {
                   Double TV2FV = 1.0;
                   if ( BugAndFix.get(i) - BugAndCreation.get(i) != 0)
                      TV2FV = (double)(BugAndFix.get(i) - BugAndCreation.get(i));
                   Psum += ((double)(BugAndFix.get(i) - BugAndAV.get(i)) / TV2FV);
                   Ptotal = (double)i;
-
+train += 1;
+                  fileWriterTrain.append(BugAndKey.get(i) + "\n");
                   //FIND KAPPA FOR EACH PROJECT
 
                   for (j = 1 ; j <= BugAndFix.get(i); j++) {
@@ -353,6 +359,7 @@ public class AllAVRetrievalMethods {
                      }
                   }
                }
+System.out.println("train " + train.toString());
 
                Double observedP = (double)(ZTP + ZTN) / (double)(ZTP+ ZFN + ZFP + ZTN);
                Double aP = (double)((ZTP + ZFN) * (ZTP + ZFP)) / (double)(ZTP+ ZFN + ZFP + ZTN);
@@ -404,8 +411,10 @@ System.out.println("All kappas: " + kappaP0.toString() + " " + kappaP25.toString
                fifTP = 0L; fifTN = 0L; fifFP = 0L; fifFN = 0L;
                SFTP = 0L; SFTN = 0L; SFFP = 0L; SFFN = 0L;
                HunTP = 0L; HunTN = 0L; HunFP = 0L; HunFN = 0L;
-
-               for ( i = ((totalBugs / 2)); i <= (totalBugs ) ; i++) {
+Integer test = 0;
+               for ( i = ((totalBugs / 3) + 1); i <= (totalBugs * 2 / 3) ; i++) {
+test += 1;
+                  fileWriterTest.append(BugAndKey.get(i) +"\n");
                   for (j = 1 ; j <= BugAndFix.get(i); j++) {
                      String simple, proportion0_5, proportion1, proportion2, merge, coldStart,szz,szzB,szz0, szz25,szz50,szz75,szz100, actual;
                      if (j < BugAndAV.get(i) || j >= BugAndFix.get(i))
@@ -657,7 +666,7 @@ System.out.println("All kappas: " + kappaP0.toString() + " " + kappaP25.toString
                      }
                   }
                }
-
+System.out.println("test " +test.toString());
                Double precision = (double)sTP /(double)(sTP + sFP);
                Double recall = (double)sTP /(double)(sTP + sFN);
                Double F1 = (double)(precision * recall *2) / (double)(precision + recall);
@@ -823,6 +832,10 @@ System.out.println("All kappas: " + kappaP0.toString() + " " + kappaP25.toString
                fileWriter.close();
                fileWriter2.flush();
                fileWriter2.close();
+               fileWriterTrain.flush();
+               fileWriterTrain.close();
+               fileWriterTest.flush();
+               fileWriterTest.close();
             } catch (IOException e) {
                System.out.println("Error while flushing/closing fileWriter !!!");
                e.printStackTrace();

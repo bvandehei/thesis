@@ -251,3 +251,4 @@ DELTASPIKE-1371,2019-03-12T14:11:50.000+0000,documentation/src/main/asciidoc/dat
 DELTASPIKE-1373,2019-03-19T18:26:57.000+0000,deltaspike/core/api/src/main/java/org/apache/deltaspike/core/api/resourceloader/InjectableResource.java|documentation/src/main/asciidoc/core.adoc|,32,33,33
 DELTASPIKE-1374,2019-03-25T10:16:34.000+0000,pom.xml|site/src/main/asciidoc/index.adoc|site/src/main/asciidoc/news.adoc|,32,33,33
 DELTASPIKE-1372,2019-03-25T10:29:01.000+0000,deltaspike/modules/test-control/impl/pom.xml|,32,33,33
+DELTASPIKE-1378,2019-05-14T22:38:38.000+0000,deltaspike/modules/jpa/impl/src/main/java/org/apache/deltaspike/jpa/impl/entitymanager/EntityManagerRefLookup.java|,32,33,33

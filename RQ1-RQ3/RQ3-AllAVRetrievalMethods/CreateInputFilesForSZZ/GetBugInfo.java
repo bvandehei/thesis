@@ -25,6 +25,7 @@ public class GetBugInfo {
    public static ArrayList<LocalDateTime> releases;
    public static HashMap<String, Integer> closedBugs;
    public static HashMap<String, String> closedBugsAndFix;
+   public static HashMap<String, LocalDateTime> closedBugsAndFixDate;
    public static HashMap<String, String> closedBugsAndDirectory;
    public static HashMap<String, String> closedBugsAndHash;
    public static HashMap<String, Integer> closedBugsAndAV;
@@ -246,6 +247,7 @@ public class GetBugInfo {
 
 						   closedBugs = new HashMap<String, Integer>();
 						   closedBugsAndFix = new HashMap<String, String>();
+						   closedBugsAndFixDate = new HashMap<String, LocalDateTime>();
 						   closedBugsAndDirectory = new HashMap<String, String>();
 						   closedBugsAndCreationDate = new HashMap<String, String>();
 						   closedBugsAndHash = new HashMap<String, String>();
@@ -257,16 +259,16 @@ public class GetBugInfo {
 
                //check all repos for the bug key
                for ( i = 1; i < token.length; i++) {
-                  String command = "git clone " + token[i];
-                  Process proc = Runtime.getRuntime().exec(command);
-                  proc.waitFor();
+                  //String command = "git clone " + token[i];
+                  //Process proc = Runtime.getRuntime().exec(command);
+                  //proc.waitFor();
                   String[] token2 = token[i].split("/");
                   String path =  token2[token2.length - 1].substring(0, token2[token2.length - 1].length() - 4);
                   for ( j = 0; j < bugs.size(); j++) {
-                     command = "git --git-dir ./" + path +
+                     String command = "git --git-dir ./GitClones/" + path +
                      "/.git log --branches --grep="+ bugs.get(j) +" --pretty=format:%cd%H --date=iso -1";
                       // Read the output
-                      proc = Runtime.getRuntime().exec(command);
+                      Process proc = Runtime.getRuntime().exec(command);
                       BufferedReader reader =
                         new BufferedReader(new InputStreamReader(proc.getInputStream()));
                       String line = "";
@@ -275,8 +277,11 @@ public class GetBugInfo {
                           String datePart = line.substring(0, 25);
                           String hash = line.substring(25);
                           Integer x = findRelease(datePart.substring(0,19).replace(" ", "T"));
-                          if (closedBugs.get(bugs.get(j)) == null || closedBugs.get(bugs.get(j)) < x) {
+                          LocalDateTime dt = LocalDateTime.parse(datePart.substring(0,19).replace(" ", "T"));
+                          if (closedBugs.get(bugs.get(j)) == null || closedBugs.get(bugs.get(j)) < x
+                               || closedBugsAndFixDate.get(bugs.get(j)).isBefore(dt)) {
                                closedBugsAndFix.put(bugs.get(j), datePart);
+                               closedBugsAndFixDate.put(bugs.get(j), dt);
                                closedBugsAndHash.put(bugs.get(j), hash);
                                closedBugsAndDirectory.put(bugs.get(j), path);
                                closedBugs.put(bugs.get(j), x);

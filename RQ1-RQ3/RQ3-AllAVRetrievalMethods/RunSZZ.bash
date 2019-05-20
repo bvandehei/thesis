@@ -1,6 +1,6 @@
 #!/bin/bash
 
-FILES=CreateInputFiles/IssueJsonFiles/*
+FILES=CreateInputFilesForSZZ/IssueJsonFiles/*
 for f in $FILES
 do
   n=${f%_issue*}
@@ -11,7 +11,7 @@ do
     newname+="$n"
     newname+="_fix_and_introducers_pairs_"
     newname+="$i.json"
-    repo="CreateInputFiles/GitClones/"
+    repo="CreateInputFilesForSZZ/GitClones/"
     repo+="$n/"
     echo "java -jar szz_find_bug_introducers-0.1.jar -i $f -r $repo -d $i"
     java -jar szz_find_bug_introducers-0.1.jar -i $f -r $repo -d $i

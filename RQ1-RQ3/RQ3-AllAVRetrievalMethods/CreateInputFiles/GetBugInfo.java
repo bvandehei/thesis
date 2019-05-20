@@ -24,6 +24,7 @@ public class GetBugInfo {
 
    public static ArrayList<LocalDateTime> releases;
    public static HashMap<String, Integer> closedBugs;
+   public static HashMap<String, LocalDateTime> closedBugsAndFix;
    public static HashMap<String, String> closedBugsAndClasses;
    public static HashMap<String, Integer> closedBugsAndAV;
    public static HashMap<String, Integer> closedBugsAndCreation;
@@ -238,6 +239,7 @@ public class GetBugInfo {
                getReleases(token[0]);
 
 						   closedBugs = new HashMap<String, Integer>();
+						   closedBugsAndFix = new HashMap<String, LocalDateTime>();
 						   closedBugsAndClasses = new HashMap<String, String>();
                closedBugsAndAV = new HashMap<String, Integer>();
                closedBugsAndCreation = new HashMap<String, Integer>();
@@ -265,7 +267,10 @@ public class GetBugInfo {
                           String datePart = line.substring(0, 19);
                           String hash = line.substring(25);
                           Integer x = findRelease(datePart);
-                          if (closedBugs.get(bugs.get(j)) == null || closedBugs.get(bugs.get(j)) < x) {
+                          LocalDateTime dt = LocalDateTime.parse(datePart);
+                          if (closedBugs.get(bugs.get(j)) == null || closedBugs.get(bugs.get(j)) < x
+                               || closedBugsAndFix.get(bugs.get(j)).isBefore(dt)) {
+                               closedBugsAndFix.put(bugs.get(j),dt);
                                closedBugs.put(bugs.get(j), x);
                                command = "git --git-dir ./" + path + "/.git " +
                                  "diff --name-only " + hash + "^ " + hash;

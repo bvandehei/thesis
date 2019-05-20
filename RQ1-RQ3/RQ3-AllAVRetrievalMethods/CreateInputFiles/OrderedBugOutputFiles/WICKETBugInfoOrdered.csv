@@ -79,7 +79,7 @@ WICKET-576,2007-05-24T18:38:44.000+0000,wicket-core/src/main/java/org/apache/wic
 WICKET-4,2007-05-24T21:22:43.000+0000,wicket-extensions/src/main/java/org/apache/wicket/extensions/ajax/markup/html/modal/res/modal.js|,1,2,128
 WICKET-427,2007-05-25T17:31:58.000+0000,wicket-core/src/main/java/org/apache/wicket/request/resource/AbstractResource.java|,4,5,61
 WICKET-540,2007-05-25T18:03:02.000+0000,wicket-experimental/wicket-atmosphere/src/main/java/org/apache/wicket/atmosphere/PageKey.java|,4,7,87
-WICKET-593,2007-05-27T10:50:43.000+0000,wicket-core/src/main/java/org/apache/wicket/page/AbstractPageManager.java|,5,7,101
+WICKET-593,2007-05-27T10:50:43.000+0000,wicket-core/src/test/js/data/ajax/manyEvaluationsResponse.xml|,5,7,136
 WICKET-558,2007-05-28T12:31:12.000+0000,wicket-util/src/main/java/org/apache/wicket/util/collections/IntHashMap.java|wicket-util/src/test/java/org/apache/wicket/util/collections/IntHashMapTest.java|,6,7,97
 WICKET-557,2007-05-28T13:09:33.000+0000,wicket-core/src/main/java/org/apache/wicket/Component.java|wicket-core/src/test/java/org/apache/wicket/util/tester/WicketTesterLazyIsPageStatelessRedirectToBufferTest.java|,6,7,94
 WICKET-519,2007-05-28T20:49:10.000+0000,wicket-core/src/main/java/org/apache/wicket/ajax/form/AjaxFormSubmitBehavior.java|wicket-core/src/main/java/org/apache/wicket/ajax/form/AjaxFormValidatingBehavior.java|wicket-examples/src/main/java/org/apache/wicket/examples/ajax/builtin/GuestBook.java|,6,6,96

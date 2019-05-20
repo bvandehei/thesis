@@ -230,6 +230,7 @@ DELTASPIKE-939,2015-07-15T21:05:23.000+0000,deltaspike/modules/jsf/impl/src/main
 DELTASPIKE-1139,2016-04-29T10:54:25.000+0000,deltaspike/core/api/src/main/java/org/apache/deltaspike/core/api/config/ConfigResolver.java|deltaspike/core/api/src/test/java/org/apache/deltaspike/test/api/config/ConfigResolverTest.java|deltaspike/core/api/src/test/resources/META-INF/services/org.apache.deltaspike.core.spi.config.ConfigSource|,25,26,26
 DELTASPIKE-1014,2015-10-29T06:47:05.000+0000,deltaspike/modules/security/impl/src/main/java/org/apache/deltaspike/security/impl/authorization/SecuredAnnotationAuthorizer.java|,20,21,21
 DELTASPIKE-1256,2017-05-24T11:52:32.000+0000,deltaspike/core/api/src/main/java/org/apache/deltaspike/core/api/config/ConfigResolver.java|deltaspike/modules/test-control/impl/src/test/java/org/apache/deltaspike/test/testcontrol/uc013/ContainerConfigTest.java|,28,29,29
+DELTASPIKE-1378,2019-05-14T22:38:38.000+0000,deltaspike/modules/jpa/impl/src/main/java/org/apache/deltaspike/jpa/impl/entitymanager/EntityManagerRefLookup.java|,32,33,33
 DELTASPIKE-1016,2015-10-31T10:56:09.000+0000,documentation/src/main/asciidoc/jsf.adoc|,20,21,21
 DELTASPIKE-1372,2019-03-25T10:29:01.000+0000,deltaspike/modules/test-control/impl/pom.xml|,32,33,33
 DELTASPIKE-931,2015-06-16T08:54:13.000+0000,deltaspike/test-utils/src/main/java/org/apache/deltaspike/test/utils/ShrinkWrapArchiveUtil.java|,16,18,18
