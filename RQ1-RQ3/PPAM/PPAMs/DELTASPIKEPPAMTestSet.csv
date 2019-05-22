@@ -1,4 +1,4 @@
-Bug ID,Version Index,Version Name,Days from Version to Ticket Creation,LOC touched from Version to Ticket Creation,Bugginess
+Bug ID,Version Index,Version Name,Days from Version to FV,LOC touched from Version to FV,Bugginess
 DELTASPIKE-681,10,1.0.2,0,0,No
 DELTASPIKE-681,9,1.0.1,23,13,Yes
 DELTASPIKE-681,8,1.0.0,52,13,No

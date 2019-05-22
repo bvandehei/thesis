@@ -74,7 +74,6 @@ public class AllAVRetrievalMethods {
                   brBugs.readLine();
                   while ( (linefrombug = brBugs.readLine()) != null) {
                      String[] tokenBug = linefrombug.split(cvsSplitBy);
-System.out.println(tokenBug[0]);
                      BugAndKey.put(bugOrder, tokenBug[0]);
                      BugAndAV.put(bugOrder, Integer.parseInt(tokenBug[3]));
                      BugAndCreation.put(bugOrder, Integer.parseInt(tokenBug[4]));
@@ -107,12 +106,16 @@ System.out.println(tokenBug[0]);
          FileWriter fileWriter2 = null;
          FileWriter fileWriterTrain = null;
          FileWriter fileWriterTest = null;
+         FileWriter fileWriterTrainResults = null;
+         FileWriter fileWriterSZZBest = null;
          try {
             //Name of CSV for output
 				    fileWriter = new FileWriter("MethodsResults.csv");
 				    fileWriter2 = new FileWriter("MethodsStatistics.csv");
 				    fileWriterTrain = new FileWriter("TrainBugs.csv");
 				    fileWriterTest = new FileWriter("TestBugs.csv");
+				    fileWriterTrainResults = new FileWriter("TrainMethodsResults.csv");
+				    fileWriterSZZBest = new FileWriter("SZZBest.csv");
             //Header for CSV
             fileWriter.append("Project Key,Bug ID,Bug Order,Version ID,Version Name," +
                               "Simple,Proportion0.5,Proportion1,Proportion2,Merge,Cold Start Proportion," +
@@ -120,6 +123,8 @@ System.out.println(tokenBug[0]);
             fileWriter.append("\n");
             fileWriter2.append("Project Key,Method,Precision,Recall,F1,MCC,Kappa");
             fileWriter2.append("\n");
+            fileWriterTrainResults.append("Bug ID,Version Name,SZZu0,SZZu25,SZZu50,SZZu75,SZZu100,Actual\n");
+            fileWriterSZZBest.append("Project,Percent of Best SZZ\n");
 
             while ( (linefromcsv = br.readLine()) != null) {
                String[] token = linefromcsv.split(cvsSplitBy);
@@ -357,6 +362,9 @@ train += 1;
                         else
                            HunTN++;
                      }
+                     fileWriterTrainResults.append(BugAndKey.get(i) + "," +
+                       releaseNames.get(j) + "," + Zp + "," + TFp + ","
+                       + Fifp + "," + SFp + "," + Hunp + ","+ actual + "\n");
                   }
                }
 System.out.println("train " + train.toString());
@@ -403,6 +411,7 @@ System.out.println("train " + train.toString());
                if ( kappaP100 >= kappaP0 && kappaP100 >= kappaP25 && kappaP100 >= kappaP50 && kappaP100 >= kappaP75)
                   bestPercent = 100;
 System.out.println("Best kappa: " + bestPercent.toString());
+               fileWriterSZZBest.append(token[0] + ","+ bestPercent.toString() + "\n");
 System.out.println("All kappas: " + kappaP0.toString() + " " + kappaP25.toString() + " " + kappaP50.toString() + " " + kappaP75.toString() + " " + kappaP100.toString());
 
 
@@ -836,6 +845,10 @@ System.out.println("test " +test.toString());
                fileWriterTrain.close();
                fileWriterTest.flush();
                fileWriterTest.close();
+               fileWriterTrainResults.flush();
+               fileWriterTrainResults.close();
+               fileWriterSZZBest.flush();
+               fileWriterSZZBest.close();
             } catch (IOException e) {
                System.out.println("Error while flushing/closing fileWriter !!!");
                e.printStackTrace();

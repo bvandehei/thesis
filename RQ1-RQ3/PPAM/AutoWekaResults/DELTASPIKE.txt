@@ -1,0 +1,45 @@
+Auto-WEKA result:
+best classifier: weka.classifiers.lazy.LWL
+arguments: [-A, weka.core.neighboursearch.LinearNNSearch, -W, weka.classifiers.rules.JRip, --, -N, 4.57362617258134, -E, -O, 2]
+attribute search: null
+attribute search arguments: []
+attribute evaluation: null
+attribute evaluation arguments: []
+metric: kappa
+estimated kappa: 0.8695792676905952
+training time on evaluation dataset: 0.001 seconds
+
+You can use the chosen classifier in your own code as follows:
+
+Classifier classifier = AbstractClassifier.forName("weka.classifiers.lazy.LWL", new String[]{"-A", "weka.core.neighboursearch.LinearNNSearch", "-W", "weka.classifiers.rules.JRip", "--", "-N", "4.57362617258134", "-E", "-O", "2"});
+classifier.buildClassifier(instances);
+
+
+Correctly Classified Instances         441               88.024  %
+Incorrectly Classified Instances        60               11.976  %
+Kappa statistic                          0.7199
+Mean absolute error                      0.1998
+Root mean squared error                  0.3178
+Relative absolute error                 44.6741 %
+Root relative squared error             67.2115 %
+Total Number of Instances              501     
+
+=== Confusion Matrix ===
+
+   a   b   <-- classified as
+ 317  15 |   a = No
+  45 124 |   b = Yes
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 0.955    0.266    0.876      0.955    0.914      0.727    0.868     0.890     No
+                 0.734    0.045    0.892      0.734    0.805      0.727    0.868     0.862     Yes
+Weighted Avg.    0.880    0.192    0.881      0.880    0.877      0.727    0.868     0.881     
+
+Temporary run directories:
+/var/folders/s7/rzc2tq9j4lj397dbvd5djnzc0000gn/T/autoweka7543056783144272645/
+
+
+For better performance, try giving Auto-WEKA more time.
+

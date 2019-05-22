@@ -1,4 +1,4 @@
-Bug ID,Version Index,Version Name,Days from Version to Ticket Creation,LOC touched from Version to Ticket Creation,Bugginess
+Bug ID,Version Index,Version Name,Days from Version to FV,LOC touched from Version to FV,Bugginess
 DELTASPIKE-206,3,0.3-incubating,0,0,No
 DELTASPIKE-206,2,0.2-incubating,106,63,Yes
 DELTASPIKE-206,1,0.1-incubating,178,63,No

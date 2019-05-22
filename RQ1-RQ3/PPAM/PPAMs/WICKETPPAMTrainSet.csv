@@ -1,4 +1,4 @@
-Bug ID,Version Index,Version Name,Days from Version to Ticket Creation,LOC touched from Version to Ticket Creation,Bugginess
+Bug ID,Version Index,Version Name,Days from Version to FV,LOC touched from Version to FV,Bugginess
 WICKET-2394,30,1.4.1,0,0,No
 WICKET-2394,29,1.4.0,7,2,Yes
 WICKET-2394,28,1.4-RC7,13,2,Yes

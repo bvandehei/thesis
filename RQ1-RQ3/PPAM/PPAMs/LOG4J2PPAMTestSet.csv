@@ -1,4 +1,4 @@
-Bug ID,Version Index,Version Name,Days from Version to Ticket Creation,LOC touched from Version to Ticket Creation,Bugginess
+Bug ID,Version Index,Version Name,Days from Version to FV,LOC touched from Version to FV,Bugginess
 LOG4J2-1434,25,2.6.2,0,0,No
 LOG4J2-1434,24,2.6.1,27,15,Yes
 LOG4J2-1434,23,2.6,35,19,No

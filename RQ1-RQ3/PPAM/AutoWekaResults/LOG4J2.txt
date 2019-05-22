@@ -1,0 +1,53 @@
+Auto-WEKA result:
+best classifier: weka.classifiers.trees.RandomForest
+arguments: [-I, 108, -K, 1, -depth, 0]
+attribute search: weka.attributeSelection.BestFirst
+attribute search arguments: [-D, 1, -N, 8]
+attribute evaluation: weka.attributeSelection.CfsSubsetEval
+attribute evaluation arguments: [-M, -L]
+metric: kappa
+estimated kappa: 0.9973379937809054
+training time on evaluation dataset: 1.006 seconds
+
+You can use the chosen classifier in your own code as follows:
+
+AttributeSelection as = new AttributeSelection();
+ASSearch asSearch = ASSearch.forName("weka.attributeSelection.BestFirst", new String[]{"-D", "1", "-N", "8"});
+as.setSearch(asSearch);
+ASEvaluation asEval = ASEvaluation.forName("weka.attributeSelection.CfsSubsetEval", new String[]{"-M", "-L"});
+as.setEvaluator(asEval);
+as.SelectAttributes(instances);
+instances = as.reduceDimensionality(instances);
+Classifier classifier = AbstractClassifier.forName("weka.classifiers.trees.RandomForest", new String[]{"-I", "108", "-K", "1", "-depth", "0"});
+classifier.buildClassifier(instances);
+
+
+Correctly Classified Instances        4004               99.8753 %
+Incorrectly Classified Instances         5                0.1247 %
+Kappa statistic                          0.9973
+Mean absolute error                      0.0706
+Root mean squared error                  0.1202
+Relative absolute error                 15.0778 %
+Root relative squared error             24.8472 %
+Total Number of Instances             4009     
+
+=== Confusion Matrix ===
+
+    a    b   <-- classified as
+ 1499    0 |    a = No
+    5 2505 |    b = Yes
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 1.000    0.002    0.997      1.000    0.998      0.997    1.000     1.000     No
+                 0.998    0.000    1.000      0.998    0.999      0.997    1.000     1.000     Yes
+Weighted Avg.    0.999    0.001    0.999      0.999    0.999      0.997    1.000     1.000     
+
+Temporary run directories:
+/var/folders/s7/rzc2tq9j4lj397dbvd5djnzc0000gn/T/autoweka326708210148641979/
+
+
+For better performance, try giving Auto-WEKA more time.
+Tried 260 configurations; to get good results reliably you may need to allow for trying thousands of configurations.
+

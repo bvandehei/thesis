@@ -231,9 +231,9 @@ public class PPAM {
 				       fileWriterTrain = new FileWriter(outnameTrain);
 				       fileWriterTest = new FileWriter(outnameTest);
 				       //Header for CSV
-				       fileWriterTrain.append("Bug ID,Version Index,Version Name,Days from Version to Ticket Creation,LOC touched from Version to Ticket Creation,Bugginess");
+				       fileWriterTrain.append("Bug ID,Version Index,Version Name,Days from Version to FV,LOC touched from Version to FV,Bugginess");
 				       fileWriterTrain.append("\n");
-				       fileWriterTest.append("Bug ID,Version Index,Version Name,Days from Version to Ticket Creation,LOC touched from Version to Ticket Creation,Bugginess");
+				       fileWriterTest.append("Bug ID,Version Index,Version Name,Days from Version to FV,LOC touched from Version to FV,Bugginess");
 				       fileWriterTest.append("\n");
                releases = new ArrayList<LocalDateTime>();
                getReleases(token[0]);

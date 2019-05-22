@@ -1,4 +1,4 @@
-Bug ID,Version Index,Version Name,Days from Version to Ticket Creation,LOC touched from Version to Ticket Creation,Bugginess
+Bug ID,Version Index,Version Name,Days from Version to FV,LOC touched from Version to FV,Bugginess
 AMQCPP-197,11,2.2.2,0,0,No
 AMQCPP-197,10,2.2.1,6,1,Yes
 AMQCPP-197,9,2.2,85,21,Yes

@@ -1,4 +1,4 @@
-Bug ID,Version Index,Version Name,Days from Version to Ticket Creation,LOC touched from Version to Ticket Creation,Bugginess
+Bug ID,Version Index,Version Name,Days from Version to FV,LOC touched from Version to FV,Bugginess
 XERCESJ-91,18,2.7.0,0,0,No
 XERCESJ-91,17,2.6.2,479,1253,Yes
 XERCESJ-91,16,2.6.1,493,1486,Yes

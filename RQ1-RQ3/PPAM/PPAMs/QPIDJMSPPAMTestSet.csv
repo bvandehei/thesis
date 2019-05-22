@@ -1,4 +1,4 @@
-Bug ID,Version Index,Version Name,Days from Version to Ticket Creation,LOC touched from Version to Ticket Creation,Bugginess
+Bug ID,Version Index,Version Name,Days from Version to FV,LOC touched from Version to FV,Bugginess
 QPIDJMS-179,10,0.10.0,0,0,No
 QPIDJMS-179,9,0.9.0,43,23,Yes
 QPIDJMS-179,8,0.8.0,95,27,Yes

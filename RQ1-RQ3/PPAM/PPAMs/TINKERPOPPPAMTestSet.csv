@@ -1,4 +1,4 @@
-Bug ID,Version Index,Version Name,Days from Version to Ticket Creation,LOC touched from Version to Ticket Creation,Bugginess
+Bug ID,Version Index,Version Name,Days from Version to FV,LOC touched from Version to FV,Bugginess
 TINKERPOP-1874,14,3.3.2,0,0,No
 TINKERPOP-1874,13,3.3.1,38,5388,Yes
 TINKERPOP-1874,12,3.2.6,156,8311,No

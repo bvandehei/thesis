@@ -1,4 +1,4 @@
-Bug ID,Version Index,Version Name,Days from Version to Ticket Creation,LOC touched from Version to Ticket Creation,Bugginess
+Bug ID,Version Index,Version Name,Days from Version to FV,LOC touched from Version to FV,Bugginess
 XERCESJ-1082,18,2.7.0,0,0,No
 XERCESJ-1082,17,2.6.2,475,8133,Yes
 XERCESJ-1082,16,2.6.1,489,8135,No

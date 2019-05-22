@@ -1,0 +1,52 @@
+Auto-WEKA result:
+best classifier: weka.classifiers.trees.J48
+arguments: [-J, -M, 1]
+attribute search: weka.attributeSelection.BestFirst
+attribute search arguments: [-D, 1, -N, 7]
+attribute evaluation: weka.attributeSelection.CfsSubsetEval
+attribute evaluation arguments: [-M]
+metric: kappa
+estimated kappa: 0.7983044600073719
+training time on evaluation dataset: 0.035 seconds
+
+You can use the chosen classifier in your own code as follows:
+
+AttributeSelection as = new AttributeSelection();
+ASSearch asSearch = ASSearch.forName("weka.attributeSelection.BestFirst", new String[]{"-D", "1", "-N", "7"});
+as.setSearch(asSearch);
+ASEvaluation asEval = ASEvaluation.forName("weka.attributeSelection.CfsSubsetEval", new String[]{"-M"});
+as.setEvaluator(asEval);
+as.SelectAttributes(instances);
+instances = as.reduceDimensionality(instances);
+Classifier classifier = AbstractClassifier.forName("weka.classifiers.trees.J48", new String[]{"-J", "-M", "1"});
+classifier.buildClassifier(instances);
+
+
+Correctly Classified Instances         481               93.7622 %
+Incorrectly Classified Instances        32                6.2378 %
+Kappa statistic                          0.7983
+Mean absolute error                      0.1055
+Root mean squared error                  0.2296
+Relative absolute error                 32.7891 %
+Root relative squared error             57.3235 %
+Total Number of Instances              513     
+
+=== Confusion Matrix ===
+
+   a   b   <-- classified as
+ 399  11 |   a = No
+  21  82 |   b = Yes
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 0.973    0.204    0.950      0.973    0.961      0.800    0.933     0.969     No
+                 0.796    0.027    0.882      0.796    0.837      0.800    0.933     0.842     Yes
+Weighted Avg.    0.938    0.168    0.936      0.938    0.936      0.800    0.933     0.943     
+
+Temporary run directories:
+/var/folders/s7/rzc2tq9j4lj397dbvd5djnzc0000gn/T/autoweka2604401954545025140/
+
+
+For better performance, try giving Auto-WEKA more time.
+

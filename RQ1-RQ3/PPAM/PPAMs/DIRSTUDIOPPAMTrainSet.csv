@@ -1,4 +1,4 @@
-Bug ID,Version Index,Version Name,Days from Version to Ticket Creation,LOC touched from Version to Ticket Creation,Bugginess
+Bug ID,Version Index,Version Name,Days from Version to FV,LOC touched from Version to FV,Bugginess
 DIRSTUDIO-94,23,2.0.0-M9 (2.0.0.v20150606-M9),0,0,No
 DIRSTUDIO-94,22,2.0.0-M8 (2.0.0.v20130628),74,1471,Yes
 DIRSTUDIO-94,21,2.0.0-M7 (2.0.0.v20130517),111,1491,Yes

@@ -1,4 +1,4 @@
-Bug ID,Version Index,Version Name,Days from Version to Ticket Creation,LOC touched from Version to Ticket Creation,Bugginess
+Bug ID,Version Index,Version Name,Days from Version to FV,LOC touched from Version to FV,Bugginess
 AMQCPP-403,32,3.4.3,0,0,No
 AMQCPP-403,31,3.4.2,28,59,Yes
 AMQCPP-403,30,3.4.1,158,59,No

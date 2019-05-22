@@ -1,4 +1,4 @@
-Bug ID,Version Index,Version Name,Days from Version to Ticket Creation,LOC touched from Version to Ticket Creation,Bugginess
+Bug ID,Version Index,Version Name,Days from Version to FV,LOC touched from Version to FV,Bugginess
 SYNCOPE-560,21,1.2.1,0,0,No
 SYNCOPE-560,20,1.2.0,4,46,Yes
 SYNCOPE-560,19,1.2.0-M1,29,289,No
