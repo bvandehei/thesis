@@ -1,0 +1,45 @@
+Auto-WEKA result:
+best classifier: weka.classifiers.meta.Bagging
+arguments: [-P, 70, -I, 47, -S, 1, -W, weka.classifiers.trees.LMT, --, -B, -R, -C, -P, -M, 1, -W, 0]
+attribute search: null
+attribute search arguments: []
+attribute evaluation: null
+attribute evaluation arguments: []
+metric: kappa
+estimated kappa: 0.9834670752852936
+training time on evaluation dataset: 98.116 seconds
+
+You can use the chosen classifier in your own code as follows:
+
+Classifier classifier = AbstractClassifier.forName("weka.classifiers.meta.Bagging", new String[]{"-P", "70", "-I", "47", "-S", "1", "-W", "weka.classifiers.trees.LMT", "--", "-B", "-R", "-C", "-P", "-M", "1", "-W", "0"});
+classifier.buildClassifier(instances);
+
+
+Correctly Classified Instances        1079               87.7236 %
+Incorrectly Classified Instances       151               12.2764 %
+Kappa statistic                          0.7572
+Mean absolute error                      0.0925
+Root mean squared error                  0.2144
+Relative absolute error                 18.7929 %
+Root relative squared error             43.2266 %
+Total Number of Instances             1230     
+
+=== Confusion Matrix ===
+
+   a   b   <-- classified as
+ 551 142 |   a = No
+   9 528 |   b = Yes
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 0.795    0.017    0.984      0.795    0.879      0.775    0.993     0.992     No
+                 0.983    0.205    0.788      0.983    0.875      0.775    0.993     0.990     Yes
+Weighted Avg.    0.877    0.099    0.898      0.877    0.877      0.775    0.993     0.991     
+
+Temporary run directories:
+/var/folders/s7/rzc2tq9j4lj397dbvd5djnzc0000gn/T/autoweka3472223149053399881/
+
+
+For better performance, try giving Auto-WEKA more time.
+

@@ -1,0 +1,46 @@
+Auto-WEKA result:
+best classifier: weka.classifiers.trees.RandomForest
+arguments: [-I, 5, -K, 4, -depth, 5]
+attribute search: null
+attribute search arguments: []
+attribute evaluation: null
+attribute evaluation arguments: []
+metric: kappa
+estimated kappa: 0.9628963066600489
+training time on evaluation dataset: 0.17 seconds
+
+You can use the chosen classifier in your own code as follows:
+
+Classifier classifier = AbstractClassifier.forName("weka.classifiers.trees.RandomForest", new String[]{"-I", "5", "-K", "4", "-depth", "5"});
+classifier.buildClassifier(instances);
+
+
+Correctly Classified Instances        3933               98.1043 %
+Incorrectly Classified Instances        76                1.8957 %
+Kappa statistic                          0.9597
+Mean absolute error                      0.0321
+Root mean squared error                  0.1245
+Relative absolute error                  6.8631 %
+Root relative squared error             25.7331 %
+Total Number of Instances             4009     
+
+=== Confusion Matrix ===
+
+    a    b   <-- classified as
+ 1477   22 |    a = No
+   54 2456 |    b = Yes
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 0.985    0.022    0.965      0.985    0.975      0.960    0.998     0.995     No
+                 0.978    0.015    0.991      0.978    0.985      0.960    0.998     0.998     Yes
+Weighted Avg.    0.981    0.017    0.981      0.981    0.981      0.960    0.998     0.997     
+
+Temporary run directories:
+/var/folders/s7/rzc2tq9j4lj397dbvd5djnzc0000gn/T/autoweka297598602455014116/
+
+
+For better performance, try giving Auto-WEKA more time.
+Tried 672 configurations; to get good results reliably you may need to allow for trying thousands of configurations.
+
