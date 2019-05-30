@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.io.BufferedReader;
 import java.io.IOException;
 
-public class SYNCOPECombined {
+public class DELTASPIKECombined {
    public static HashMap<String, Integer> VersionAndIndex;
    public static HashMap<String, Integer> BugAndFV;
    public static HashMap<String, Integer> BugAndCreation;
@@ -28,8 +28,8 @@ public class SYNCOPECombined {
    public static void main(String[] args) throws Exception{
       String linefrombug;
       String cvsSplitBy = ",";
-      String bugfilename = "../RQ3-AllAVRetrievalMethods/CreateInputFiles/OrderedBugOutputFiles/"
-                                    + "SYNCOPE" + "BugInfoOrdered.csv";
+      String bugfilename = "../../RQ3-AllAVRetrievalMethods/CreateInputFiles/OrderedBugOutputFiles/"
+                                    + "DELTASPIKE" + "BugInfoOrdered.csv";
          //Get Bug Info for each project
       try (BufferedReader brBugs = new BufferedReader(new FileReader(bugfilename))) {
          BugAndCreation = new HashMap<String, Integer>();
@@ -44,8 +44,8 @@ public class SYNCOPECombined {
          e.printStackTrace();
       }
 
-      String versionfilename = "../RQ3-AllAVRetrievalMethods/CreateInputFiles/VersionOutputFiles/"
-                                    + "SYNCOPE" + "VersionInfo.csv";
+      String versionfilename = "../../RQ3-AllAVRetrievalMethods/CreateInputFiles/VersionOutputFiles/"
+                                    + "DELTASPIKE" + "VersionInfo.csv";
          //Get Bug Info for each project
       try (BufferedReader br = new BufferedReader(new FileReader(versionfilename))) {
          VersionAndIndex = new HashMap<String, Integer>();
@@ -61,8 +61,8 @@ public class SYNCOPECombined {
          e.printStackTrace();
       }
 
-      DataSource sourceTrain = new DataSource("CombinedFiles/SYNCOPECombinedTrainSet.csv");
-      DataSource sourceTest = new DataSource("CombinedFiles/SYNCOPECombinedTestSet.csv");
+      DataSource sourceTrain = new DataSource("../CombinedFiles/DELTASPIKECombinedTrainSet.csv");
+      DataSource sourceTest = new DataSource("../CombinedFiles/DELTASPIKECombinedTestSet.csv");
 
       Instances originaldataTrain = sourceTrain.getDataSet();
       Instances originaldataTest = sourceTest.getDataSet();
@@ -84,13 +84,13 @@ public class SYNCOPECombined {
 
 
       AttributeSelection as = new AttributeSelection();
-      ASSearch asSearch = ASSearch.forName("weka.attributeSelection.GreedyStepwise", new String[]{"-B", "-R"});
+      ASSearch asSearch = ASSearch.forName("weka.attributeSelection.GreedyStepwise", new String[]{"-C", "-B", "-R"});
       as.setSearch(asSearch);
-      ASEvaluation asEval = ASEvaluation.forName("weka.attributeSelection.CfsSubsetEval", new String[]{"-M"});
+      ASEvaluation asEval = ASEvaluation.forName("weka.attributeSelection.CfsSubsetEval", new String[]{"-M", "-L"});
       as.setEvaluator(asEval);
       as.SelectAttributes(dataTrain);
       dataTrain = as.reduceDimensionality(dataTrain);
-      Classifier classifier = AbstractClassifier.forName("weka.classifiers.lazy.LWL", new String[]{"-K", "90", "-A", "weka.core.neighboursearch.LinearNNSearch", "-W", "weka.classifiers.bayes.BayesNet", "--", "-D", "-Q", "weka.classifiers.bayes.net.search.local.TabuSearch"});
+      Classifier classifier = AbstractClassifier.forName("weka.classifiers.rules.DecisionTable", new String[]{"-E", "auc", "-I", "-S", "weka.attributeSelection.BestFirst", "-X", "2"});
       classifier.buildClassifier(dataTrain);
 
       Long TP = 0L, TN = 0L, FP = 0L, FN = 0L;

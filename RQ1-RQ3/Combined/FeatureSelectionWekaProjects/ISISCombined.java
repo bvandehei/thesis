@@ -28,7 +28,7 @@ public class ISISCombined {
    public static void main(String[] args) throws Exception{
       String linefrombug;
       String cvsSplitBy = ",";
-      String bugfilename = "../RQ3-AllAVRetrievalMethods/CreateInputFiles/OrderedBugOutputFiles/"
+      String bugfilename = "../../RQ3-AllAVRetrievalMethods/CreateInputFiles/OrderedBugOutputFiles/"
                                     + "ISIS" + "BugInfoOrdered.csv";
          //Get Bug Info for each project
       try (BufferedReader brBugs = new BufferedReader(new FileReader(bugfilename))) {
@@ -44,7 +44,7 @@ public class ISISCombined {
          e.printStackTrace();
       }
 
-      String versionfilename = "../RQ3-AllAVRetrievalMethods/CreateInputFiles/VersionOutputFiles/"
+      String versionfilename = "../../RQ3-AllAVRetrievalMethods/CreateInputFiles/VersionOutputFiles/"
                                     + "ISIS" + "VersionInfo.csv";
          //Get Bug Info for each project
       try (BufferedReader br = new BufferedReader(new FileReader(versionfilename))) {
@@ -61,13 +61,13 @@ public class ISISCombined {
          e.printStackTrace();
       }
 
-      DataSource sourceTrain = new DataSource("CombinedFiles/ISISCombinedTrainSet.csv");
-      DataSource sourceTest = new DataSource("CombinedFiles/ISISCombinedTestSet.csv");
+      DataSource sourceTrain = new DataSource("../CombinedFiles/ISISCombinedTrainSet.csv");
+      DataSource sourceTest = new DataSource("../CombinedFiles/ISISCombinedTestSet.csv");
 
       Instances originaldataTrain = sourceTrain.getDataSet();
       Instances originaldataTest = sourceTest.getDataSet();
 
-      int [] indices = new int[]{0,1};
+      int [] indices = new int[]{0,1,2,3,6,7,8,9,10};
       Remove removeFilter1 = new Remove();
       removeFilter1.setAttributeIndicesArray(indices);
       removeFilter1.setInputFormat(originaldataTrain);
@@ -76,15 +76,18 @@ public class ISISCombined {
       removeFilter2.setAttributeIndicesArray(indices);
       removeFilter2.setInputFormat(originaldataTest);
       Instances dataTest = Filter.useFilter(originaldataTest, removeFilter1);
-
+System.out.println(dataTrain);
       if (dataTrain.classIndex() == -1)
          dataTrain.setClassIndex(dataTrain.numAttributes() - 1);
       if (dataTest.classIndex() == -1)
          dataTest.setClassIndex(dataTrain.numAttributes() - 1);
 
-      Classifier classifier = AbstractClassifier.forName("weka.classifiers.meta.Bagging", new String[]{"-P", "70", "-I", "47", "-S", "1", "-W", "weka.classifiers.trees.LMT", "--", "-B", "-R", "-C", "-P", "-M", "1", "-W", "0"});
+      Classifier classifier = AbstractClassifier.forName("weka.classifiers.meta.AdaBoostM1", new String[]{"-P", "100", "-I", "3", "-S", "1", "-W", "weka.classifiers.trees.J48", "--", "-O", "-S", "-M", "53", "-C", "0.5419213213837907", "-J"});
       classifier.buildClassifier(dataTrain);
-
+      Evaluation eval = new Evaluation(dataTrain);
+      eval.evaluateModel(classifier, dataTest);
+      System.out.println(eval.toSummaryString("\nResults\n======\n", false));
+      System.out.println(eval.toClassDetailsString());
       Long TP = 0L, TN = 0L, FP = 0L, FN = 0L;
       // label instances
       for (int i = 0; i < dataTest.numInstances(); i++) {

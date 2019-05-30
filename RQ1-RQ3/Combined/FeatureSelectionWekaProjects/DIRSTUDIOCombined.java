@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.io.BufferedReader;
 import java.io.IOException;
 
-public class AMQCPPCombined {
+public class DIRSTUDIOCombined {
    public static HashMap<String, Integer> VersionAndIndex;
    public static HashMap<String, Integer> BugAndFV;
    public static HashMap<String, Integer> BugAndCreation;
@@ -28,8 +28,8 @@ public class AMQCPPCombined {
    public static void main(String[] args) throws Exception{
       String linefrombug;
       String cvsSplitBy = ",";
-      String bugfilename = "../RQ3-AllAVRetrievalMethods/CreateInputFiles/OrderedBugOutputFiles/"
-                                    + "AMQCPP" + "BugInfoOrdered.csv";
+      String bugfilename = "../../RQ3-AllAVRetrievalMethods/CreateInputFiles/OrderedBugOutputFiles/"
+                                    + "DIRSTUDIO" + "BugInfoOrdered.csv";
          //Get Bug Info for each project
       try (BufferedReader brBugs = new BufferedReader(new FileReader(bugfilename))) {
          BugAndCreation = new HashMap<String, Integer>();
@@ -44,8 +44,8 @@ public class AMQCPPCombined {
          e.printStackTrace();
       }
 
-      String versionfilename = "../RQ3-AllAVRetrievalMethods/CreateInputFiles/VersionOutputFiles/"
-                                    + "AMQCPP" + "VersionInfo.csv";
+      String versionfilename = "../../RQ3-AllAVRetrievalMethods/CreateInputFiles/VersionOutputFiles/"
+                                    + "DIRSTUDIO" + "VersionInfo.csv";
          //Get Bug Info for each project
       try (BufferedReader br = new BufferedReader(new FileReader(versionfilename))) {
          VersionAndIndex = new HashMap<String, Integer>();
@@ -61,13 +61,13 @@ public class AMQCPPCombined {
          e.printStackTrace();
       }
 
-      DataSource sourceTrain = new DataSource("CombinedFiles/AMQCPPCombinedTrainSet.csv");
-      DataSource sourceTest = new DataSource("CombinedFiles/AMQCPPCombinedTestSet.csv");
+      DataSource sourceTrain = new DataSource("../CombinedFiles/DIRSTUDIOCombinedTrainSet.csv");
+      DataSource sourceTest = new DataSource("../CombinedFiles/DIRSTUDIOCombinedTestSet.csv");
 
       Instances originaldataTrain = sourceTrain.getDataSet();
       Instances originaldataTest = sourceTest.getDataSet();
 
-      int [] indices = new int[]{0,1};
+      int [] indices = new int[]{0,1,2,3,6,7,8,9,10};
       Remove removeFilter1 = new Remove();
       removeFilter1.setAttributeIndicesArray(indices);
       removeFilter1.setInputFormat(originaldataTrain);
@@ -83,11 +83,12 @@ public class AMQCPPCombined {
          dataTest.setClassIndex(dataTrain.numAttributes() - 1);
 
 
-      Classifier classifier = AbstractClassifier.forName("weka.classifiers.meta.AdaBoostM1", new String[]{"-P", "100", "-I", "58", "-S", "1", "-W", "weka.classifiers.trees.REPTree", "--", "-M", "15", "-V", "0.032973459802676415", "-L", "-1", "-P"});
+      Classifier classifier = AbstractClassifier.forName("weka.classifiers.rules.PART", new String[]{"-M", "1"});
       classifier.buildClassifier(dataTrain);
 
+
       Long TP = 0L, TN = 0L, FP = 0L, FN = 0L;
-      // label instances
+      // label dataTrain
       for (int i = 0; i < dataTest.numInstances(); i++) {
          double clsLabel = classifier.classifyInstance(dataTest.instance(i));
          String actual = dataTest.classAttribute().value((int) dataTest.instance(i).classValue());

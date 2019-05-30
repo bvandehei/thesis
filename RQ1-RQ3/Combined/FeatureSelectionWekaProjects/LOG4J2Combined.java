@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.io.BufferedReader;
 import java.io.IOException;
 
-public class WICKETCombined {
+public class LOG4J2Combined {
    public static HashMap<String, Integer> VersionAndIndex;
    public static HashMap<String, Integer> BugAndFV;
    public static HashMap<String, Integer> BugAndCreation;
@@ -28,8 +28,8 @@ public class WICKETCombined {
    public static void main(String[] args) throws Exception{
       String linefrombug;
       String cvsSplitBy = ",";
-      String bugfilename = "../RQ3-AllAVRetrievalMethods/CreateInputFiles/OrderedBugOutputFiles/"
-                                    + "WICKET" + "BugInfoOrdered.csv";
+      String bugfilename = "../../RQ3-AllAVRetrievalMethods/CreateInputFiles/OrderedBugOutputFiles/"
+                                    + "LOG4J2" + "BugInfoOrdered.csv";
          //Get Bug Info for each project
       try (BufferedReader brBugs = new BufferedReader(new FileReader(bugfilename))) {
          BugAndCreation = new HashMap<String, Integer>();
@@ -44,8 +44,8 @@ public class WICKETCombined {
          e.printStackTrace();
       }
 
-      String versionfilename = "../RQ3-AllAVRetrievalMethods/CreateInputFiles/VersionOutputFiles/"
-                                    + "WICKET" + "VersionInfo.csv";
+      String versionfilename = "../../RQ3-AllAVRetrievalMethods/CreateInputFiles/VersionOutputFiles/"
+                                    + "LOG4J2" + "VersionInfo.csv";
          //Get Bug Info for each project
       try (BufferedReader br = new BufferedReader(new FileReader(versionfilename))) {
          VersionAndIndex = new HashMap<String, Integer>();
@@ -61,13 +61,13 @@ public class WICKETCombined {
          e.printStackTrace();
       }
 
-      DataSource sourceTrain = new DataSource("CombinedFiles/WICKETCombinedTrainSet.csv");
-      DataSource sourceTest = new DataSource("CombinedFiles/WICKETCombinedTestSet.csv");
+      DataSource sourceTrain = new DataSource("../CombinedFiles/LOG4J2CombinedTrainSet.csv");
+      DataSource sourceTest = new DataSource("../CombinedFiles/LOG4J2CombinedTestSet.csv");
 
       Instances originaldataTrain = sourceTrain.getDataSet();
       Instances originaldataTest = sourceTest.getDataSet();
 
-      int [] indices = new int[]{0,1};
+      int [] indices = new int[]{0,1,2,3,5,6,7,8,9,10};
       Remove removeFilter1 = new Remove();
       removeFilter1.setAttributeIndicesArray(indices);
       removeFilter1.setInputFormat(originaldataTrain);
@@ -82,10 +82,19 @@ public class WICKETCombined {
       if (dataTest.classIndex() == -1)
          dataTest.setClassIndex(dataTrain.numAttributes() - 1);
 
-
-      Classifier classifier = AbstractClassifier.forName("weka.classifiers.trees.REPTree", new String[]{"-M", "4", "-V", "0.007491008304671099", "-L", "-1"});
+      AttributeSelection as = new AttributeSelection();
+      ASSearch asSearch = ASSearch.forName("weka.attributeSelection.BestFirst", new String[]{"-D", "1", "-N", "9"});
+      as.setSearch(asSearch);
+      ASEvaluation asEval = ASEvaluation.forName("weka.attributeSelection.CfsSubsetEval", new String[]{"-M", "-L"});
+      as.setEvaluator(asEval);
+      as.SelectAttributes(dataTrain);
+      dataTrain = as.reduceDimensionality(dataTrain);
+      Classifier classifier = AbstractClassifier.forName("weka.classifiers.rules.OneR", new String[]{"-B", "6"});
       classifier.buildClassifier(dataTrain);
-
+      Evaluation eval = new Evaluation(dataTrain);
+      eval.evaluateModel(classifier, dataTest);
+      System.out.println(eval.toSummaryString("\nResults\n======\n", false));
+      System.out.println(eval.toClassDetailsString());
       Long TP = 0L, TN = 0L, FP = 0L, FN = 0L;
       // label dataTrain
       for (int i = 0; i < dataTest.numInstances(); i++) {
@@ -97,8 +106,10 @@ public class WICKETCombined {
          Integer versionIndex = VersionAndIndex.get(versionName);
          Integer fix = BugAndFV.get(bug);
          Integer ov = BugAndCreation.get(bug);
-         if (versionIndex >= ov && versionIndex < fix)
+         if (versionIndex >= ov && versionIndex < fix) {
+            System.out.println(predicted);
             predicted = "Yes";
+         }
          if (actual.equals("Yes")) {
             if (predicted.equals("Yes"))
                TP++;

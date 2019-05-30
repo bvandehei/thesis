@@ -1,0 +1,45 @@
+Auto-WEKA result:
+best classifier: weka.classifiers.rules.OneR
+arguments: [-B, 3]
+attribute search: null
+attribute search arguments: []
+attribute evaluation: null
+attribute evaluation arguments: []
+metric: kappa
+estimated kappa: 0.9799859312799588
+training time on evaluation dataset: 0.01 seconds
+
+You can use the chosen classifier in your own code as follows:
+
+Classifier classifier = AbstractClassifier.forName("weka.classifiers.rules.OneR", new String[]{"-B", "3"});
+classifier.buildClassifier(instances);
+
+
+Correctly Classified Instances        3554               99.0248 %
+Incorrectly Classified Instances        35                0.9752 %
+Kappa statistic                          0.98  
+Mean absolute error                      0.0098
+Root mean squared error                  0.0988
+Relative absolute error                  2.0082 %
+Root relative squared error             20.0411 %
+Total Number of Instances             3589     
+
+=== Confusion Matrix ===
+
+    a    b   <-- classified as
+ 1490    0 |    a = No
+   35 2064 |    b = Yes
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 1.000    0.017    0.977      1.000    0.988      0.980    0.992     0.977     No
+                 0.983    0.000    1.000      0.983    0.992      0.980    0.992     0.993     Yes
+Weighted Avg.    0.990    0.007    0.990      0.990    0.990      0.980    0.992     0.986     
+
+Temporary run directories:
+/var/folders/s7/rzc2tq9j4lj397dbvd5djnzc0000gn/T/autoweka5138994444089412760/
+
+
+For better performance, try giving Auto-WEKA more time.
+

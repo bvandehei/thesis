@@ -1,0 +1,52 @@
+Auto-WEKA result:
+best classifier: weka.classifiers.functions.VotedPerceptron
+arguments: [-I, 2, -M, 13278, -E, 1.9108681490262591]
+attribute search: weka.attributeSelection.BestFirst
+attribute search arguments: [-D, 2, -N, 8]
+attribute evaluation: weka.attributeSelection.CfsSubsetEval
+attribute evaluation arguments: [-M, -L]
+metric: kappa
+estimated kappa: 0.8619076307794853
+training time on evaluation dataset: 0.025 seconds
+
+You can use the chosen classifier in your own code as follows:
+
+AttributeSelection as = new AttributeSelection();
+ASSearch asSearch = ASSearch.forName("weka.attributeSelection.BestFirst", new String[]{"-D", "2", "-N", "8"});
+as.setSearch(asSearch);
+ASEvaluation asEval = ASEvaluation.forName("weka.attributeSelection.CfsSubsetEval", new String[]{"-M", "-L"});
+as.setEvaluator(asEval);
+as.SelectAttributes(instances);
+instances = as.reduceDimensionality(instances);
+Classifier classifier = AbstractClassifier.forName("weka.classifiers.functions.VotedPerceptron", new String[]{"-I", "2", "-M", "13278", "-E", "1.9108681490262591"});
+classifier.buildClassifier(instances);
+
+
+Correctly Classified Instances         492               95.9064 %
+Incorrectly Classified Instances        21                4.0936 %
+Kappa statistic                          0.8619
+Mean absolute error                      0.0409
+Root mean squared error                  0.2023
+Relative absolute error                 12.7276 %
+Root relative squared error             50.5075 %
+Total Number of Instances              513     
+
+=== Confusion Matrix ===
+
+   a   b   <-- classified as
+ 410   0 |   a = No
+  21  82 |   b = Yes
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 1.000    0.204    0.951      1.000    0.975      0.870    0.898     0.951     No
+                 0.796    0.000    1.000      0.796    0.886      0.870    0.950     0.898     Yes
+Weighted Avg.    0.959    0.163    0.961      0.959    0.957      0.870    0.908     0.941     
+
+Temporary run directories:
+/var/folders/s7/rzc2tq9j4lj397dbvd5djnzc0000gn/T/autoweka6496285069015394558/
+
+
+For better performance, try giving Auto-WEKA more time.
+

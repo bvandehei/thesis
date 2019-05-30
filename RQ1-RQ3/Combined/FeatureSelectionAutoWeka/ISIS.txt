@@ -1,0 +1,45 @@
+Auto-WEKA result:
+best classifier: weka.classifiers.meta.AdaBoostM1
+arguments: [-P, 100, -I, 3, -S, 1, -W, weka.classifiers.trees.J48, --, -O, -J, -S, -M, 53, -C, 0.5419213213837907]
+attribute search: null
+attribute search arguments: []
+attribute evaluation: null
+attribute evaluation arguments: []
+metric: kappa
+estimated kappa: 0.9199368607763846
+training time on evaluation dataset: 0.524 seconds
+
+You can use the chosen classifier in your own code as follows:
+
+Classifier classifier = AbstractClassifier.forName("weka.classifiers.meta.AdaBoostM1", new String[]{"-P", "100", "-I", "3", "-S", "1", "-W", "weka.classifiers.trees.J48", "--", "-O", "-J", "-S", "-M", "53", "-C", "0.5419213213837907"});
+classifier.buildClassifier(instances);
+
+
+Correctly Classified Instances        1182               96.0976 %
+Incorrectly Classified Instances        48                3.9024 %
+Kappa statistic                          0.9199
+Mean absolute error                      0.0557
+Root mean squared error                  0.165 
+Relative absolute error                 11.3162 %
+Root relative squared error             33.272  %
+Total Number of Instances             1230     
+
+=== Confusion Matrix ===
+
+   a   b   <-- classified as
+ 691   2 |   a = No
+  46 491 |   b = Yes
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 0.997    0.086    0.938      0.997    0.966      0.922    0.995     0.993     No
+                 0.914    0.003    0.996      0.914    0.953      0.922    0.995     0.990     Yes
+Weighted Avg.    0.961    0.050    0.963      0.961    0.961      0.922    0.995     0.992     
+
+Temporary run directories:
+/var/folders/s7/rzc2tq9j4lj397dbvd5djnzc0000gn/T/autoweka4688169664714267699/
+
+
+For better performance, try giving Auto-WEKA more time.
+

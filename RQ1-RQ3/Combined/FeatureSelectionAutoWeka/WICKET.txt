@@ -1,0 +1,53 @@
+Auto-WEKA result:
+best classifier: weka.classifiers.meta.AdaBoostM1
+arguments: [-P, 100, -I, 4, -S, 1, -W, weka.classifiers.bayes.NaiveBayes, --, -D]
+attribute search: weka.attributeSelection.GreedyStepwise
+attribute search arguments: [-N, 58]
+attribute evaluation: weka.attributeSelection.CfsSubsetEval
+attribute evaluation arguments: [-M]
+metric: kappa
+estimated kappa: 0.9347490012602233
+training time on evaluation dataset: 0.373 seconds
+
+You can use the chosen classifier in your own code as follows:
+
+AttributeSelection as = new AttributeSelection();
+ASSearch asSearch = ASSearch.forName("weka.attributeSelection.GreedyStepwise", new String[]{"-N", "58"});
+as.setSearch(asSearch);
+ASEvaluation asEval = ASEvaluation.forName("weka.attributeSelection.CfsSubsetEval", new String[]{"-M"});
+as.setEvaluator(asEval);
+as.SelectAttributes(instances);
+instances = as.reduceDimensionality(instances);
+Classifier classifier = AbstractClassifier.forName("weka.classifiers.meta.AdaBoostM1", new String[]{"-P", "100", "-I", "4", "-S", "1", "-W", "weka.classifiers.bayes.NaiveBayes", "--", "-D"});
+classifier.buildClassifier(instances);
+
+
+Correctly Classified Instances       21210               96.7433 %
+Incorrectly Classified Instances       714                3.2567 %
+Kappa statistic                          0.9347
+Mean absolute error                      0.0448
+Root mean squared error                  0.153 
+Relative absolute error                  8.9821 %
+Root relative squared error             30.6239 %
+Total Number of Instances            21924     
+
+=== Confusion Matrix ===
+
+     a     b   <-- classified as
+ 10141   353 |     a = No
+   361 11069 |     b = Yes
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 0.966    0.032    0.966      0.966    0.966      0.935    0.994     0.990     No
+                 0.968    0.034    0.969      0.968    0.969      0.935    0.994     0.994     Yes
+Weighted Avg.    0.967    0.033    0.967      0.967    0.967      0.935    0.994     0.992     
+
+Temporary run directories:
+/var/folders/s7/rzc2tq9j4lj397dbvd5djnzc0000gn/T/autoweka6715589274957954844/
+
+
+For better performance, try giving Auto-WEKA more time.
+Tried 225 configurations; to get good results reliably you may need to allow for trying thousands of configurations.
+

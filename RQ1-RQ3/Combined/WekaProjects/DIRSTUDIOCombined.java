@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.io.BufferedReader;
 import java.io.IOException;
 
-public class LOG4J2Combined {
+public class DIRSTUDIOCombined {
    public static HashMap<String, Integer> VersionAndIndex;
    public static HashMap<String, Integer> BugAndFV;
    public static HashMap<String, Integer> BugAndCreation;
@@ -28,8 +28,8 @@ public class LOG4J2Combined {
    public static void main(String[] args) throws Exception{
       String linefrombug;
       String cvsSplitBy = ",";
-      String bugfilename = "../RQ3-AllAVRetrievalMethods/CreateInputFiles/OrderedBugOutputFiles/"
-                                    + "LOG4J2" + "BugInfoOrdered.csv";
+      String bugfilename = "../../RQ3-AllAVRetrievalMethods/CreateInputFiles/OrderedBugOutputFiles/"
+                                    + "DIRSTUDIO" + "BugInfoOrdered.csv";
          //Get Bug Info for each project
       try (BufferedReader brBugs = new BufferedReader(new FileReader(bugfilename))) {
          BugAndCreation = new HashMap<String, Integer>();
@@ -44,8 +44,8 @@ public class LOG4J2Combined {
          e.printStackTrace();
       }
 
-      String versionfilename = "../RQ3-AllAVRetrievalMethods/CreateInputFiles/VersionOutputFiles/"
-                                    + "LOG4J2" + "VersionInfo.csv";
+      String versionfilename = "../../RQ3-AllAVRetrievalMethods/CreateInputFiles/VersionOutputFiles/"
+                                    + "DIRSTUDIO" + "VersionInfo.csv";
          //Get Bug Info for each project
       try (BufferedReader br = new BufferedReader(new FileReader(versionfilename))) {
          VersionAndIndex = new HashMap<String, Integer>();
@@ -61,8 +61,8 @@ public class LOG4J2Combined {
          e.printStackTrace();
       }
 
-      DataSource sourceTrain = new DataSource("CombinedFiles/LOG4J2CombinedTrainSet.csv");
-      DataSource sourceTest = new DataSource("CombinedFiles/LOG4J2CombinedTestSet.csv");
+      DataSource sourceTrain = new DataSource("../CombinedFiles/DIRSTUDIOCombinedTrainSet.csv");
+      DataSource sourceTest = new DataSource("../CombinedFiles/DIRSTUDIOCombinedTestSet.csv");
 
       Instances originaldataTrain = sourceTrain.getDataSet();
       Instances originaldataTest = sourceTest.getDataSet();
@@ -83,11 +83,19 @@ public class LOG4J2Combined {
          dataTest.setClassIndex(dataTrain.numAttributes() - 1);
 
 
-      Classifier classifier = AbstractClassifier.forName("weka.classifiers.trees.RandomForest", new String[]{"-I", "5", "-K", "4", "-depth", "5"});
+      AttributeSelection as = new AttributeSelection();
+      ASSearch asSearch = ASSearch.forName("weka.attributeSelection.GreedyStepwise", new String[]{"-N", "139"});
+      as.setSearch(asSearch);
+      ASEvaluation asEval = ASEvaluation.forName("weka.attributeSelection.CfsSubsetEval", new String[]{});
+      as.setEvaluator(asEval);
+      as.SelectAttributes(dataTrain);
+      dataTrain = as.reduceDimensionality(dataTrain);
+      Classifier classifier = AbstractClassifier.forName("weka.classifiers.meta.AttributeSelectedClassifier", new String[]{"-S", "weka.attributeSelection.GreedyStepwise", "-E", "weka.attributeSelection.CfsSubsetEval", "-W", "weka.classifiers.rules.PART", "--", "-M", "1", "-B"});
       classifier.buildClassifier(dataTrain);
 
+
       Long TP = 0L, TN = 0L, FP = 0L, FN = 0L;
-      // label instances
+      // label dataTrain
       for (int i = 0; i < dataTest.numInstances(); i++) {
          double clsLabel = classifier.classifyInstance(dataTest.instance(i));
          String actual = dataTest.classAttribute().value((int) dataTest.instance(i).classValue());

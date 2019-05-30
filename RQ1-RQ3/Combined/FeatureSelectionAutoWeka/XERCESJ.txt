@@ -1,0 +1,52 @@
+Auto-WEKA result:
+best classifier: weka.classifiers.rules.PART
+arguments: [-M, 1]
+attribute search: weka.attributeSelection.GreedyStepwise
+attribute search arguments: [-C, -B, -R]
+attribute evaluation: weka.attributeSelection.CfsSubsetEval
+attribute evaluation arguments: [-M, -L]
+metric: kappa
+estimated kappa: 0.9710680878834022
+training time on evaluation dataset: 0.036 seconds
+
+You can use the chosen classifier in your own code as follows:
+
+AttributeSelection as = new AttributeSelection();
+ASSearch asSearch = ASSearch.forName("weka.attributeSelection.GreedyStepwise", new String[]{"-C", "-B", "-R"});
+as.setSearch(asSearch);
+ASEvaluation asEval = ASEvaluation.forName("weka.attributeSelection.CfsSubsetEval", new String[]{"-M", "-L"});
+as.setEvaluator(asEval);
+as.SelectAttributes(instances);
+instances = as.reduceDimensionality(instances);
+Classifier classifier = AbstractClassifier.forName("weka.classifiers.rules.PART", new String[]{"-M", "1"});
+classifier.buildClassifier(instances);
+
+
+Correctly Classified Instances        1573               98.5589 %
+Incorrectly Classified Instances        23                1.4411 %
+Kappa statistic                          0.9711
+Mean absolute error                      0.0279
+Root mean squared error                  0.1182
+Relative absolute error                  5.6236 %
+Root relative squared error             23.7143 %
+Total Number of Instances             1596     
+
+=== Confusion Matrix ===
+
+   a   b   <-- classified as
+ 736   0 |   a = No
+  23 837 |   b = Yes
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 1.000    0.027    0.970      1.000    0.985      0.971    0.987     0.970     No
+                 0.973    0.000    1.000      0.973    0.986      0.971    0.987     0.988     Yes
+Weighted Avg.    0.986    0.012    0.986      0.986    0.986      0.971    0.987     0.979     
+
+Temporary run directories:
+/var/folders/s7/rzc2tq9j4lj397dbvd5djnzc0000gn/T/autoweka3484299051028939682/
+
+
+For better performance, try giving Auto-WEKA more time.
+

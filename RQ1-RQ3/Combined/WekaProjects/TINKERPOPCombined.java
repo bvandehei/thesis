@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.io.BufferedReader;
 import java.io.IOException;
 
-public class QPIDJMSCombined {
+public class TINKERPOPCombined {
    public static HashMap<String, Integer> VersionAndIndex;
    public static HashMap<String, Integer> BugAndFV;
    public static HashMap<String, Integer> BugAndCreation;
@@ -28,8 +28,8 @@ public class QPIDJMSCombined {
    public static void main(String[] args) throws Exception{
       String linefrombug;
       String cvsSplitBy = ",";
-      String bugfilename = "../RQ3-AllAVRetrievalMethods/CreateInputFiles/OrderedBugOutputFiles/"
-                                    + "QPIDJMS" + "BugInfoOrdered.csv";
+      String bugfilename = "../../RQ3-AllAVRetrievalMethods/CreateInputFiles/OrderedBugOutputFiles/"
+                                    + "TINKERPOP" + "BugInfoOrdered.csv";
          //Get Bug Info for each project
       try (BufferedReader brBugs = new BufferedReader(new FileReader(bugfilename))) {
          BugAndCreation = new HashMap<String, Integer>();
@@ -44,8 +44,8 @@ public class QPIDJMSCombined {
          e.printStackTrace();
       }
 
-      String versionfilename = "../RQ3-AllAVRetrievalMethods/CreateInputFiles/VersionOutputFiles/"
-                                    + "QPIDJMS" + "VersionInfo.csv";
+      String versionfilename = "../../RQ3-AllAVRetrievalMethods/CreateInputFiles/VersionOutputFiles/"
+                                    + "TINKERPOP" + "VersionInfo.csv";
          //Get Bug Info for each project
       try (BufferedReader br = new BufferedReader(new FileReader(versionfilename))) {
          VersionAndIndex = new HashMap<String, Integer>();
@@ -61,8 +61,8 @@ public class QPIDJMSCombined {
          e.printStackTrace();
       }
 
-      DataSource sourceTrain = new DataSource("CombinedFiles/QPIDJMSCombinedTrainSet.csv");
-      DataSource sourceTest = new DataSource("CombinedFiles/QPIDJMSCombinedTestSet.csv");
+      DataSource sourceTrain = new DataSource("../CombinedFiles/TINKERPOPCombinedTrainSet.csv");
+      DataSource sourceTest = new DataSource("../CombinedFiles/TINKERPOPCombinedTestSet.csv");
 
       Instances originaldataTrain = sourceTrain.getDataSet();
       Instances originaldataTest = sourceTest.getDataSet();
@@ -83,11 +83,18 @@ public class QPIDJMSCombined {
          dataTest.setClassIndex(dataTrain.numAttributes() - 1);
 
 
-      Classifier classifier = AbstractClassifier.forName("weka.classifiers.meta.AdaBoostM1", new String[]{"-P", "70", "-I", "40", "-S", "1", "-W", "weka.classifiers.rules.JRip", "--", "-N", "4.385660633822311", "-O", "1"});
+      AttributeSelection as = new AttributeSelection();
+      ASSearch asSearch = ASSearch.forName("weka.attributeSelection.BestFirst", new String[]{"-D", "1", "-N", "9"});
+      as.setSearch(asSearch);
+      ASEvaluation asEval = ASEvaluation.forName("weka.attributeSelection.CfsSubsetEval", new String[]{"-L"});
+      as.setEvaluator(asEval);
+      as.SelectAttributes(dataTrain);
+      dataTrain = as.reduceDimensionality(dataTrain);
+      Classifier classifier = AbstractClassifier.forName("weka.classifiers.trees.RandomForest", new String[]{"-I", "9", "-K", "0", "-depth", "15"});
       classifier.buildClassifier(dataTrain);
 
       Long TP = 0L, TN = 0L, FP = 0L, FN = 0L;
-      // label instances
+      // label dataTrain
       for (int i = 0; i < dataTest.numInstances(); i++) {
          double clsLabel = classifier.classifyInstance(dataTest.instance(i));
          String actual = dataTest.classAttribute().value((int) dataTest.instance(i).classValue());

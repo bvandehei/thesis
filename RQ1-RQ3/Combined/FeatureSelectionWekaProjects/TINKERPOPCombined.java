@@ -28,7 +28,7 @@ public class TINKERPOPCombined {
    public static void main(String[] args) throws Exception{
       String linefrombug;
       String cvsSplitBy = ",";
-      String bugfilename = "../RQ3-AllAVRetrievalMethods/CreateInputFiles/OrderedBugOutputFiles/"
+      String bugfilename = "../../RQ3-AllAVRetrievalMethods/CreateInputFiles/OrderedBugOutputFiles/"
                                     + "TINKERPOP" + "BugInfoOrdered.csv";
          //Get Bug Info for each project
       try (BufferedReader brBugs = new BufferedReader(new FileReader(bugfilename))) {
@@ -44,7 +44,7 @@ public class TINKERPOPCombined {
          e.printStackTrace();
       }
 
-      String versionfilename = "../RQ3-AllAVRetrievalMethods/CreateInputFiles/VersionOutputFiles/"
+      String versionfilename = "../../RQ3-AllAVRetrievalMethods/CreateInputFiles/VersionOutputFiles/"
                                     + "TINKERPOP" + "VersionInfo.csv";
          //Get Bug Info for each project
       try (BufferedReader br = new BufferedReader(new FileReader(versionfilename))) {
@@ -61,13 +61,13 @@ public class TINKERPOPCombined {
          e.printStackTrace();
       }
 
-      DataSource sourceTrain = new DataSource("CombinedFiles/TINKERPOPCombinedTrainSet.csv");
-      DataSource sourceTest = new DataSource("CombinedFiles/TINKERPOPCombinedTestSet.csv");
+      DataSource sourceTrain = new DataSource("../CombinedFiles/TINKERPOPCombinedTrainSet.csv");
+      DataSource sourceTest = new DataSource("../CombinedFiles/TINKERPOPCombinedTestSet.csv");
 
       Instances originaldataTrain = sourceTrain.getDataSet();
       Instances originaldataTest = sourceTest.getDataSet();
 
-      int [] indices = new int[]{0,1};
+      int [] indices = new int[]{0,1,2,3,5,6,7,8,9,10};
       Remove removeFilter1 = new Remove();
       removeFilter1.setAttributeIndicesArray(indices);
       removeFilter1.setInputFormat(originaldataTrain);
@@ -82,15 +82,14 @@ public class TINKERPOPCombined {
       if (dataTest.classIndex() == -1)
          dataTest.setClassIndex(dataTrain.numAttributes() - 1);
 
-
       AttributeSelection as = new AttributeSelection();
-      ASSearch asSearch = ASSearch.forName("weka.attributeSelection.BestFirst", new String[]{"-D", "1", "-N", "9"});
+      ASSearch asSearch = ASSearch.forName("weka.attributeSelection.BestFirst", new String[]{"-D", "2", "-N", "8"});
       as.setSearch(asSearch);
-      ASEvaluation asEval = ASEvaluation.forName("weka.attributeSelection.CfsSubsetEval", new String[]{"-L"});
+      ASEvaluation asEval = ASEvaluation.forName("weka.attributeSelection.CfsSubsetEval", new String[]{"-M", "-L"});
       as.setEvaluator(asEval);
       as.SelectAttributes(dataTrain);
       dataTrain = as.reduceDimensionality(dataTrain);
-      Classifier classifier = AbstractClassifier.forName("weka.classifiers.trees.RandomForest", new String[]{"-I", "9", "-K", "0", "-depth", "15"});
+      Classifier classifier = AbstractClassifier.forName("weka.classifiers.functions.VotedPerceptron", new String[]{"-I", "2", "-M", "13278", "-E", "1.9108681490262591"});
       classifier.buildClassifier(dataTrain);
 
       Long TP = 0L, TN = 0L, FP = 0L, FN = 0L;

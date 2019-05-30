@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.io.BufferedReader;
 import java.io.IOException;
 
-public class XERCESJCombined {
+public class DELTASPIKECombined {
    public static HashMap<String, Integer> VersionAndIndex;
    public static HashMap<String, Integer> BugAndFV;
    public static HashMap<String, Integer> BugAndCreation;
@@ -28,8 +28,8 @@ public class XERCESJCombined {
    public static void main(String[] args) throws Exception{
       String linefrombug;
       String cvsSplitBy = ",";
-      String bugfilename = "../RQ3-AllAVRetrievalMethods/CreateInputFiles/OrderedBugOutputFiles/"
-                                    + "XERCESJ" + "BugInfoOrdered.csv";
+      String bugfilename = "../../RQ3-AllAVRetrievalMethods/CreateInputFiles/OrderedBugOutputFiles/"
+                                    + "DELTASPIKE" + "BugInfoOrdered.csv";
          //Get Bug Info for each project
       try (BufferedReader brBugs = new BufferedReader(new FileReader(bugfilename))) {
          BugAndCreation = new HashMap<String, Integer>();
@@ -44,8 +44,8 @@ public class XERCESJCombined {
          e.printStackTrace();
       }
 
-      String versionfilename = "../RQ3-AllAVRetrievalMethods/CreateInputFiles/VersionOutputFiles/"
-                                    + "XERCESJ" + "VersionInfo.csv";
+      String versionfilename = "../../RQ3-AllAVRetrievalMethods/CreateInputFiles/VersionOutputFiles/"
+                                    + "DELTASPIKE" + "VersionInfo.csv";
          //Get Bug Info for each project
       try (BufferedReader br = new BufferedReader(new FileReader(versionfilename))) {
          VersionAndIndex = new HashMap<String, Integer>();
@@ -61,13 +61,13 @@ public class XERCESJCombined {
          e.printStackTrace();
       }
 
-      DataSource sourceTrain = new DataSource("CombinedFiles/XERCESJCombinedTrainSet.csv");
-      DataSource sourceTest = new DataSource("CombinedFiles/XERCESJCombinedTestSet.csv");
+      DataSource sourceTrain = new DataSource("../CombinedFiles/DELTASPIKECombinedTrainSet.csv");
+      DataSource sourceTest = new DataSource("../CombinedFiles/DELTASPIKECombinedTestSet.csv");
 
       Instances originaldataTrain = sourceTrain.getDataSet();
       Instances originaldataTest = sourceTest.getDataSet();
 
-      int [] indices = new int[]{0,1};
+      int [] indices = new int[]{0,1,2,3,5,7,8,9,10};
       Remove removeFilter1 = new Remove();
       removeFilter1.setAttributeIndicesArray(indices);
       removeFilter1.setInputFormat(originaldataTrain);
@@ -83,14 +83,7 @@ public class XERCESJCombined {
          dataTest.setClassIndex(dataTrain.numAttributes() - 1);
 
 
-      AttributeSelection as = new AttributeSelection();
-      ASSearch asSearch = ASSearch.forName("weka.attributeSelection.GreedyStepwise", new String[]{"-C", "-B", "-R"});
-      as.setSearch(asSearch);
-      ASEvaluation asEval = ASEvaluation.forName("weka.attributeSelection.CfsSubsetEval", new String[]{"-L"});
-      as.setEvaluator(asEval);
-      as.SelectAttributes(dataTrain);
-      dataTrain = as.reduceDimensionality(dataTrain);
-      Classifier classifier = AbstractClassifier.forName("weka.classifiers.lazy.LWL", new String[]{"-K", "60", "-A", "weka.core.neighboursearch.LinearNNSearch", "-W", "weka.classifiers.trees.DecisionStump", "--"});
+      Classifier classifier = AbstractClassifier.forName("weka.classifiers.trees.RandomForest", new String[]{"-I", "10", "-K", "0", "-depth", "0"});
       classifier.buildClassifier(dataTrain);
 
       Long TP = 0L, TN = 0L, FP = 0L, FN = 0L;
