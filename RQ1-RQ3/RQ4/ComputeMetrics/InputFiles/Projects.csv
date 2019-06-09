@@ -1,0 +1,10 @@
+TINKERPOP,https://github.com/apache/tinkerpop.git
+XERCESJ,https://github.com/apache/xerces2-j.git
+QPIDJMS,https://github.com/apache/qpid-jms.git
+LOG4J2,https://github.com/apache/logging-log4j2.git
+DIRSTUDIO,https://github.com/apache/directory-studio.git
+SYNCOPE,https://github.com/apache/syncope.git
+ISIS,https://github.com/apache/isis.git
+WICKET,https://github.com/apache/wicket.git
+DELTASPIKE,https://github.com/apache/deltaspike.git
+AMQCPP,https://github.com/apache/activemq-cpp.git
